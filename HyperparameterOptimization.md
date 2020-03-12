@@ -197,7 +197,8 @@ $$
 
 ---
 ## 対数尤度の下限計算 (2/2)
-- 下限の先ほどの式を、前半と後半にそれぞれ使う
+- 下限の先ほどの式を、前半と後半にそれぞれ使う : $\alpha = \sum_k \alpha_k$
+
 $$
 \begin{aligned}
 \log P(\boldsymbol{z}|\boldsymbol{\alpha})
@@ -222,13 +223,50 @@ $$
     \log \Gamma(N_d {}_k + \alpha_k) - 
     \log \Gamma(\alpha_k)
   \\} (- \sum_k \alpha_k^{\ast}) \\\\
-  &+ \sum_k \\{
-    \log \Gamma(N_d {}_k + \alpha_k) - 
-    \log \Gamma(\alpha_k) \\\\
   &+ \alpha_k \\{
     \log \Gamma(N_d {}_k + \alpha_k) - 
     \log \Gamma(\alpha_k)
-    \\} (\log \alpha_k^{\ast} - \log \alpha_k)
-  \\}]       
+    \\} \times \log \alpha_k^{\ast}
+  ] + C
 \end{aligned}
 $$
+
+---
+## 下限を最大化する
+- 下限の式 $f(\alpha^{\ast})$ について最大化するために、  
+  $\alpha^{\ast}$ で微分し、ゼロになるポイントを探す
+
+$$
+\frac{df(\alpha_k^{\ast})}{d\alpha_k^{\ast}}
+=\sum_d \\{ -[\Phi(\alpha + N_d) - \Phi(\alpha)]
++\frac{\alpha_k (\Phi(\alpha_k + N_d {}_k) - \Phi(\alpha_k))}{\alpha_k^{\ast}}
+\\}
+$$
+
+- この値をゼロとして、$\alpha_k^{\ast}$ について解くと次の反復式を得る
+- この反復を収束するまで実施する
+
+$$
+\alpha_k^{*} = \alpha_k
+  \frac{\sum_d [\Psi(\alpha_k + N_d {}_k) - \Psi(\alpha_k)]}
+       {\sum_d [\Psi(\alpha + N_d) - \Psi(\alpha)]}
+$$
+
+---
+## 実施結果例
+- Wallach+, Rethinking LDA (NIPS2009) より
+  - 事前分布のハイパーパラメータ(トピック $\alpha$, 単語 $\beta$)について  
+    それぞれ一様/非一様にしてパフォーマンスを確認した文献
+- 折れ線グラフ(a) は対数尤度
+  - 上から $\alpha$のみ非一様(赤), $\alpha, \beta$が非一様(黒)
+  - $\alpha$を一様にするケースでは対数尤度が大幅減少
+- トピックの具体例 (b)
+  - トピックの$\alpha$と、そのトピックに割り当てられた単語(太字)
+
+![](./RethinkingLDA.png)
+
+---
+## まとめ
+- CGSで得られた $\boldsymbol{z}_d$ を用いて、  
+  非一様な $\alpha, \beta$ を最適化する反復式を使うことができる。
+- $\alpha$のみを非一様にするのがよい。
