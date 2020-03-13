@@ -11,14 +11,14 @@
     - 単語ごとにトピックが抽出される
       $z_{dn} \sim \textrm{Multinomial}(\boldsymbol{\theta}_d)$
     - トピックから単語が抽出される
-      $w_{dn} \sim \textrm{Multinomial}(\phi_{dk})$
+      $w_{dn} \sim \textrm{Multinomial}(\phi_{z_{dn}})$
 - Collapsed Gibbs Sampling とは
   - 単語分布、トピック分布を積分消去することで、  
     各単語のトピック$\boldsymbol{z}_d$をGibbs Samplingでサンプル
   - サンプリングした$\boldsymbol{z}_d$ から
     $\boldsymbol{\phi}_k, \boldsymbol{\theta}_d$ を求める
 
-![](./Smoothed_LDA.png)
+![](./images/Smoothed_LDA.png)
 
 ---
 ## ハイパーパラメータ
@@ -36,7 +36,7 @@
 1. 最尤推定により非一様なハイパーパラメータ更新式が得られる
   - Minka TP (2000) のメモ : オリジナルの導出
     https://tminka.github.io/papers/dirichlet/minka-dirichlet.pdf
-  - Wallach H (2000) の講義ノート  
+  - Wallach H の講義ノート  
     https://people.cs.umass.edu/~cxl/cs691bm/lec09.html
 
 2. 非一様なハイパーパラメータを採用すれば精度が上がる。
@@ -49,7 +49,7 @@
 - そのあとで $\boldsymbol{z}_d$ を Fix して、
   尤度最大となる $\boldsymbol{\alpha}, \boldsymbol{\beta}$ を求める
 
-![](./Smoothed_LDA.png)
+![](./images/Smoothed_LDA.png)
 
 ---
 ## ハイパーパラメータの最尤推定 (1/2)
@@ -123,6 +123,11 @@ $$
   - 他のライブラリでも大抵便利関数があり、何も恐れることはない。
 
 ---
+- 個人的なディガンマ $\Psi(x)$ のイメージ
+
+![](./images/devil.jpg)
+
+---
 ## シンプルな下限を探そう
 - 次の値を $\boldsymbol{\alpha}$ について最大化すれば良いのであった。
 $$
@@ -167,7 +172,7 @@ $$
 ## 下限の傾向
 - $x0 = 3, a = 4$ として下限の傾向をプロット
 
-![](./lower_bound.png)
+![](./images/lower_bound.png)
 
 - 式1 : $x_0$ の周りで直線で近似していることに相当
 - 式2 : $x_0$ の周りで $\log x$ として近似していることに相当。
@@ -190,10 +195,10 @@ $$
 =&
 \sum_d \left[
 \log \Gamma(\alpha) - \log \Gamma(N_d + \alpha) +
-\sum_k \{
+\sum_k \left[
   \log \Gamma(N_d {}_k + \alpha_k) - 
   \log \Gamma(\alpha_k)
-\}
+\right]
 \right]
 \end{aligned}
 $$
@@ -220,30 +225,30 @@ $$
     \log \Gamma(N_d {}_k + \alpha_k) - 
     \log \Gamma(\alpha_k)
     \\} (\log \alpha_k^{\ast} - \log \alpha_k)
-\\}] \\\\
+\\} ] \\\\
 =&
 \sum_d [
   \\{
     \log \Gamma(N_d {}_k + \alpha_k) - 
     \log \Gamma(\alpha_k)
   \\} (- \sum_k \alpha_k^{\ast}) \\\\
-  &+ \alpha_k \\{
+  &+ \sum_k \alpha_k \\{
     \log \Gamma(N_d {}_k + \alpha_k) - 
     \log \Gamma(\alpha_k)
-    \\} \times \log \alpha_k^{\ast}
+    \\} \cdot \log \alpha_k^{\ast}
   ] + C
 \end{aligned}
 $$
 
 ---
 ## 下限を最大化する
-- 下限の式 $f(\alpha^{\ast})$ について最大化するために、  
-  $\alpha^{\ast}$ で微分し、ゼロになるポイントを探す
+- 下限の式 $f(\boldsymbol{\alpha}^{\ast})$ について最大化するために、  
+  $\alpha_k^{\ast}$ で微分し、ゼロになるポイントを探す
 
 $$
-\frac{df(\alpha_k^{\ast})}{d\alpha_k^{\ast}}
-=\sum_d \\{ -[\Phi(\alpha + N_d) - \Phi(\alpha)]
-+\frac{\alpha_k (\Phi(\alpha_k + N_d {}_k) - \Phi(\alpha_k))}{\alpha_k^{\ast}}
+\frac{df(\boldsymbol{\alpha}^{\ast})}{d\alpha_k^{\ast}}
+=\sum_d \\{ -[\Psi(\alpha + N_d) - \Psi(\alpha)]
++\frac{\alpha_k (\Psi(\alpha_k + N_d {}_k) - \Psi(\alpha_k))}{\alpha_k^{\ast}}
 \\}
 $$
 
@@ -267,7 +272,7 @@ $$
 - トピックの具体例 (b)
   - トピックの$\alpha$と、そのトピックに割り当てられた単語(太字)
 
-![](./RethinkingLDA.png)
+![](./images/RethinkingLDA.png)
 
 ---
 ## まとめ
