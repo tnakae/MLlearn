@@ -1,5 +1,5 @@
 # な組 Tech MTG
-## Short Intro about the way to scikit-learn PR merge
+## sklearn PR for Ridge positive argument
 
 ---
 
