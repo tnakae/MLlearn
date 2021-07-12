@@ -4,7 +4,7 @@
 ---
 
 ## Summary
-- sklearnのPRがmain branchにマージされました!
+- sklearnの[PR](https://github.com/scikit-learn/scikit-learn/pull/20231)がmain branchにマージされました!
 - この経緯をお話しします。
 
 ![](./images/sklearn_PR_head.png)
@@ -120,9 +120,9 @@ class sklearn.linear_model.Ridge(
       problem where weights of the linear model are expected to be positive
   - This is not easy task because
     - 制約条件を今のsolverにそのまま追加することが難しい  
-      constraints is not accepted in implemented method in Ridge
-    - 新しいsolverを追加する必要がある。  
-      needed to add new solver to Ridge
+      Constraints cannot be added to implemented method in Ridge
+    - 新しいsolverを追加する必要がある。
+      Needed to add new solver to Ridge
       - Issue では [scipy.optimizer.lsq_linear](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.lsq_linear.html) を使うことが提案されている。
       - これを使って実装してみるか...
 
@@ -181,9 +181,9 @@ $
       - $[...]^{+}$ は ReLU と同じ意味
   - L-BFGS-B
     - 準ニュートン法(quasi-Newton method)の一つ。
-    - `scipy.optimize` に constrains を与えられる高速な実装がある。
+    - `scipy.optimize` に constraints を与えられる[高速な実装](https://docs.scipy.org/doc/scipy/reference/optimize.minimize-lbfgsb.html)がある。
 - results
-  - L-BFGS-B > PGD > CD >> lsq_linear
+  - 速い順に : L-BFGS-B > PGD > CD >> lsq_linear
   - Sparse でも Dense でも L-BFGS-B が抜群に速い
 - 反省
   - ***Before creating PR, you have to implement benchmark program,  
@@ -204,3 +204,10 @@ $
   - Added black to pre-commit in sklearn
   - Changed source code by black... (やめてくれ...)
 - Consensus mismatch between sklearn core reviewers...
+
+---
+
+## Merged!
+- v1.0
+  - [Release note](https://scikit-learn.org/dev/whats_new/v1.0.html#sklearn-linear-model) : 自分で書いてPRに含めなければいけない。
+  - [Users manual Ridge](https://scikit-learn.org/dev/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge)
