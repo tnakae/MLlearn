@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>KDD2021</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="kdd2021報告">KDD2021報告</h1>
+<h2 id="are-we-really-making-much-progress-revisiting-benchmarking-and-refining-heterogeneous-graph-neural-networks">Are we really making much progress?: Revisiting, benchmarking and refining heterogeneous graph neural networks</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467350">論文</a></li>
+</ul>
+<h3 id="概要">概要</h3>
+<p>Heterogeneous Graph Neural Network (HGNN) のベンチマークデータセットである <a href="https://github.com/THUDM/HGB">Heterogeneous Graph Benchmark (HGB)</a> を整備した。</p>
+<p>このレポジトリで、3つのタスクの、全部で11のデータセットを使い、 これまで公開された複数の手法を使って精度比較をした報告</p>
+<p>Are we really making much progress? はいわずもがな MaurizioFD氏による Are We Really Making Much Progress? A Worrying Analysis of Recent Neural Recommendation Approaches が念頭にあり、Graph Neural Network の最近の進展を批判的に 取り上げた論文である。</p>
+<p>様々な手法が最近提案されているが、これまでの手法の中で 最も精度が高かったのは、ほとんどがGATという初期の方法のケースで、 さらにGATを若干拡張した手法である、Simple-HGNという（単純な）手法が 最も精度が高かったという報告となっている。</p>
+<h2 id="learning-based-proximity-matrix-factorization-for-node-embedding">Learning Based Proximity Matrix Factorization for Node Embedding</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467296">論文</a></li>
+<li>実装がない。</li>
+</ul>
+<h3 id="概要-1">概要</h3>
+<p>Node Embedding の算出方法の提案。Lameneという名前。 Personalized PageRank におけるスタートに戻る確率を、各時刻において 一律でない値を採用し、これを学習するもの。 学習には、Differentiable SVD を採用する。PyTorchを利用。 ただし計算コストが高く、コストがかからないような工夫があるため、 ロジックが若干ややこしい。</p>
+<p>計算した結果得られる Node Embedding による各タスクの精度は 他の手法よりも高い。既存の手法で最も高いものとして STRAP という 手法があるらしい。</p>
+<h2 id="signed-graph-neural-network-with-latent-groups">Signed Graph Neural Network with Latent Groups</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467355">論文</a></li>
+<li><a href="https://github.com/haoxin1998/GS-GNN">実装</a> … まだ公開されていない感じ。</li>
+</ul>
+<h3 id="概要-2">概要</h3>
+<p>敵・味方のネットワークで、node representation を得ようという話。 「味方の味方は味方」「敵の敵は味方」となっているように友達関係が 構成されるという “balance theory” (バランス理論) に基づいて愚直に representation を構成しようとすると破綻するので、ある程度グループ にまとめてしまい、グループ内で representation が似ていて、 そこから敵・味方関係の矛盾が少なくなるように representation を 算出するアルゴリズム GS-GNN を構成した。</p>
+<h2 id="approximate-graph-propagation">Approximate Graph Propagation</h2>
+<ul>
+<li>[論文](https://dl.acm.org/doi/pdf/10.1145/3447548.3467243</li>
+<li><a href="https://github.com/wanghzccls/">著者github</a> … ただし実装がない</li>
+</ul>
+<h3 id="概要-3">概要</h3>
+<p>Graph Propagation に基づく Node Representation の手法として、 Personalized PageRank (PPR), heat kernel, Katz などの手法があるが これらを統合したうえで、さらに近似計算で高速化した改良手法の提案</p>
+<p>各種手法との精度・計算時間の比較グラフを見ると、 既存手法より10倍前後程度速くて、かつ既存手法より若干精度が劣る 程度にとどめられるとのこと。</p>
+<h2 id="maximizing-influence-of-leaders-in-social-networks">Maximizing Influence of Leaders in Social Networks</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467229">論文</a></li>
+<li><a href="https://github.com/kedges/kedges">実装</a></li>
+</ul>
+<h3 id="概要-4">概要</h3>
+<p>二極化した世論(0/1)で、人々の意見は身近な知り合いの意見の平均で 決まる、とするネットワーク上のダイナミクスモデル（これを一般的に Leader-Follower DeGroot Modelというらしい）が与えられたときに、 初期条件として1の意見をもつ人達(leaders)から、0の意見を持つ人たち (follower)に対して、任意にedgeをつないでいい時に、その本数が固定の 場合に、最もダイナミクスを無限回回した時の1の意見を持つ人の割合 が最大になるようなedgeの結び方の提案。</p>
+<p>このようなedgeの選び方は submodular 性をもつので、greedy に選択 しても、ある程度精度が担保でき、かつ、1本追加で選んだ時の 1の割合は、逆行列を使った更新式 (Sherman-Morrison formula) で 更新できる。</p>
+<p>Julia を使った実装が存在する。</p>
+<h2 id="minirocket-a-very-fast-almost-deterministic-transform-for-time-series-classification">MiniRocket: A Very Fast (Almost) Deterministic Transform for Time Series Classification</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467231">論文</a></li>
+<li><a href="https://github.com/angus924/minirocket">実装</a></li>
+</ul>
+<h3 id="概要-5">概要</h3>
+<p>時系列に対する判別モデル。 Convolution Kernel の作り方がうまくて、いろんなパターンのKernelを 長さを引き延ばしてたくさん作る。 先行する手法の Rocket と似ているが、乱数を使わない決定的手法。 Rocketと比較して精度を維持しつつ75倍速くなったといっている。</p>
+<p>KDDに先行してすでに実装があったらしい。 sklearnと親和性が高く見える。</p>
+</body>
+</html>
