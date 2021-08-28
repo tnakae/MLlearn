@@ -3,72 +3,88 @@
 
 ---
 
-## KDD2021について
-いくつかPaperが紹介された。
-いまPaperをまとめているところだが時間がなくてごめんなさい。
+## KDD2021 Tutorial
+- [KDD2021](https://kdd.org/kdd2021/) の面白かった [Tutorial](https://kdd.org/kdd2021/tutorials)
+  - [Causal Inference and Machine Learning in Practice with EconML and CausalML](https://causal-machine-learning.github.io/kdd2021-tutorial/)
+    - 機械学習を用いた因果推論(causal inference)とHands-on
+    - 今回紹介する。
+  - [Multi-Objective Recommendation](https://moorecsys.github.io/)
+    - 多目的最適化(Multi-Objective Optimization)をRecommendationに適用する実例  
+      weighted summartion と GAなどの huristics を使う方法がある。
+  - [Mixed Method Development of Evaluation Metrics](https://kdd2021-mixedmethods.github.io/)
+    - サーチエンジンやレコメンドにおいて、定量的な評価結果と  
+      定性的な仮説検証/施策実行を組み合わせる Mixed Method の適用事例
 
 ---
 
-## Tutorial
-非常に面白い Tutorial が多数あった。
-- Causal Inference
-- Multi-Objective Recommendation
+## 因果推論(Causal Inference)の前提
+- ある結果変数(outcome)がある
+  - (例)ユーザがある商品を購入する, ある病気が回復する
+- outcomeが改善する処置(treatment)を実施する。
+  - (例)特定のWeb広告を見せる/見せない
+- treatmentによりoutcomeは改善するかを知りたい！
+
+![](./images/Causal_simple.png)
 
 ---
 
-## Causal Inference
-- あるeffectがある。
-- treatment を適用することで、effectがどれくらい向上するか？を推定する
-  - Uplift推定とも呼ばれる
-- treatmentとは？
-  - 通常は、直接または間接的に制御可能な施策・判断を考えることが多い。
-  - 例
-    - 特定のWeb広告を見せる・見せない
-    - ある新規サービスを利用させる・させない
-- treatment effectとは?
-  - ある施策を出した場合と出さない場合とで比較して
-    出した場合の効果の上昇のこと。
-- 同じ人に出した場合と出さない場合の両方の実験ができるの？
-  - そんなことは原理的には無理
-  - もし出さなかったとしたら？という事実と異なる仮想的な
-    実験結果との差分を考えるという意味で、反実仮想
-    を使った推定(counterfactual inference)と言われる。
+## 交絡因子(confounders)の存在
+- 例えば、あるWeb広告を見た人は見ていない人に比べて  
+  あるWebサービスへ登録率が高いとする。Web広告は登録率を上げた？
+    - 正しいこともあるが、一般的には正しくない。
+    - Correlation is not equal to causality.
+- outcome, treatment 両方に影響を与える  
+  交絡因子(Confounders)の存在に注意する。
+  - 事前の engagement が高ければ広告も見やすいし  
+    新しいサービスも使う傾向が強い（広告はなくてもよいかも？）
 
-## 単純な発想を考える
-- treatment T によって、目的変数 y の値が上がるかどうか？
-- 例えば、あるWeb広告を見た/見ないというデータと
-  あるサービスへ登録した・しなかったというデータが
-  あるとする。
-  - ただしい？
-    - 正解：正しいこともあるが、正しくないことのほうが多い
+![](./images/Causal_basic_graph.png)
 
-## 注意すべき観点
-- 交絡因子の存在に注意する。
-- 例 : 新聞購読をすると、子供の成績が上がる
-  - 新聞購読と、子供の成績には相関関係があるが
-    因果関係はない。
-  - なぜなら、この間に親の収入、という見えない関係があるから。
+---
 
-## 注意すべき点
-- 交絡因子に気を付けて因果推論をする必要がある点に注意する。
+## ランダム化比較実験 (RCT ; Randomized Controlled Trial)
+- 処置への割り付けがランダムなら、交絡因子を無視できる
+  - ランダム割り当てのA/Bテストがうまくいく理由
+
+![](./images/Causal_randomized.png)
+
+---
+
+## ランダム実験ができない場合(1) : Unconfoundedness
+- ランダム割り当てができなくても、交絡因子(Confounders)を  
+  すべて観測できていれば、補正する方法がある
+  - 傾向スコア(propensity score), IPW(inversed probability weight)
+  - Meta Learner
+  - Double Machine Learning
+
+![](./images/Causal_unconfoundedness.png)
+
+---
+
+## ランダム実験ができない場合(2) : Instrument Variable
+- 交絡因子がすべて観測できない場合でも
+  操作変数という別の変数を仮定できる場合は、
+  その変数を使った別の補正手法を使うことができる。
+  - Tutorialでは事例が紹介されているが、ややこしいので今回は説明省略。
+
+![](./images/Causal_IV.png)
+
+---
+
+## ランダム実験ができないケース
+- 割り付けがランダムにならない。
+  - 割り付け通りにユーザが思い通りの行動をとってくれない。
+- 割り付けを考えずに収集されたデータを使って分析する
+  - 観察研究(observational study)と呼ばれる
+
+---
 
 ## 
 このような場合に見たい効果
 - ATE : Average Treatment Effect
-- ATT : Average Treatment effect for treated
 - CATE : Average Treatment Effect
 
-## 交絡因子の影響を除外する3つの方法
-- ランダム割り当て実験
-  - Randomized Controlled Trial (RCT)
-- 操作変数法と呼ばれる方法
-- ...
-
-## なぜこのような推定が必要？
-- 常にランダム割り当て実験をすればいいのではないか？
-  - ランダムな割り当てができないようなケースがある。
-    - 観察データしか集まらないような場合
-    - 倫理上、ランダムな割り付けができないような場合
+---
 
 ## Tutorialで説明されている例
 - 会員登録
@@ -77,34 +93,27 @@
   - 不特定多数の人に見せることになるので、
 - ..
 
-## 因果推論で使える道具
-- RCT : 単に引き算すればいい。
-- 割り当てがランダムではない場合
-  - 傾向スコア(propensity score)を使った方法がある。
-  - 通常は、逆数重み重みづけ()
-- 共変量が多数ある場合
-  - Doubly Robust Estimator というものを使う。
-- 傾向スコアはシンプルだが次の問題がある
-  - 適用できるケースがやや限られている。
-  - 交絡要因が多すぎる場合に取り扱いが厄介である。
+---
 
-## 因果推論の補助手法
-- CausalML
-  - Meta Learnerの手法を多数実装している。
-- EconML
-  - Double Machine Learning の手法を実装している。
-  - CATEの直接推定が可能。
+## Causal Inferenceの道具
+- 確率モデル
+- 傾向スコア法
+- 機械学習手法
+  - Meta Learner
+  - Double Machine Learning
+- 機械学習手法を実装したpython package
+  - [CausalML](https://github.com/uber/causalml) (Uber)
+    - Meta Learnerの手法を多数実装している。
+  - [EconML](https://github.com/microsoft/EconML) (Microsoft)
+    - Double Machine Learning の手法を実装している。
 
-## おかなければいけない仮定
-- Unconfoundness
-  - 端的に言うと対象となる変数と、介入の双方に影響を与える変数を
-    すべて洗い出せているという前提が成り立つ場合 (正しい？)
-- Instrument Variables (操作変数の方法)
-  - この場合は、すべての変数を洗い出せていなくてもOK。
+---
 
 ## Meta Learner の方法
 - C Learner 
 - 似たような考えで ...-Learnerが多数ある。
+
+---
 
 ## Double Machine Learaning の方法
 - 特徴
@@ -117,27 +126,41 @@
 - さらに treatment effect にも任意の式が使える。
   - 理論的裏付けも多数ある。
 
+---
+
 ## CATEの評価
 - C-Learner の場合
 - Double Machine Learning の場合
   - R-Learner というものとににていて。
 
+---
+
 ## Instrument Variableが存在する場合
 - 2SLS または DR IV という方法のどちらかがある。
   - ちょっとややこしい。
 
+---
+
 ## AUCCという評価
 
+---
+
 ## サンプル
+
+---
 
 ## 実業務で利用することを考える場合
 - 一部のユーザに対して実施したモデルで CATE推定用のモデルを構築する
 - Upliftが最大となるところで、
 
+---
+
 ## Tutorialガイド
 - Tutorialを見てみよう
   - CausalMLの例はとても分かりやすい : Web広告
   - EconMLの例は難しい。
+
+---
 
 ## 印象
 - ただし実際には難しい
