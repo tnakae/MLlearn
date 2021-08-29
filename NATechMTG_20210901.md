@@ -4,10 +4,10 @@
 ---
 
 ## KDD2021 Tutorial
-- [KDD2021](https://kdd.org/kdd2021/) の面白かった [Tutorial](https://kdd.org/kdd2021/tutorials)
+- [KDD2021](https://kdd.org/kdd2021/) (8/14-18) の面白かった [Tutorial](https://kdd.org/kdd2021/tutorials)
   - [Causal Inference and Machine Learning in Practice with EconML and CausalML](https://causal-machine-learning.github.io/kdd2021-tutorial/)
     - 機械学習を用いた因果推論(causal inference)とHands-on
-    - 今回紹介する。
+      - 今回紹介します。
   - [Multi-Objective Recommendation](https://moorecsys.github.io/)
     - 多目的最適化(Multi-Objective Optimization)をRecommendationに適用する実例  
       weighted summartion と GAなどの huristics を使う方法がある。
@@ -33,12 +33,24 @@
   あるWebサービスへ登録率が高いとする。Web広告は登録率を上げた？
     - 正しいこともあるが、一般的には正しくない。
     - Correlation is not equal to causality.
-- outcome, treatment 両方に影響を与える  
-  交絡因子(Confounders)の存在に注意する。
+- outcome, treatment 両方に影響を与える**交絡因子(confounders)**に注意。
   - 事前の engagement が高ければ広告も見やすいし  
     新しいサービスも使う傾向が強い（広告はなくてもよいかも？）
 
 ![](./images/Causal_basic_graph.png)
+
+---
+
+## 因果推論と効果的な費用投下
+- 広告(treatment)が不要なケースがある
+  - 広告がなくても商品を買う人がいる(Always-taker)
+  - 広告があっても商品を買わない人がいる(Never-taker)
+- 本当に広告が必要なユーザとは  **広告がないと商品を買わないが、**  
+  **広告があると買う場合。**(Persuadable)
+- 処置(treatment)があることで  結果変数(outcome)の期待値が上昇するか知りたい
+  - この上昇を**処置効果(Treatment Effect)**または**アップリフト(Uplift)**という
+
+![](./images/Causal_matrix.png)
 
 ---
 
@@ -52,10 +64,11 @@
 
 ## ランダム実験ができない場合(1) : Unconfoundedness
 - ランダム割り当てができなくても、交絡因子(Confounders)を  
-  すべて観測できていれば、補正する方法がある
-  - 傾向スコア(propensity score), IPW(inversed probability weight)
-  - Meta Learner
-  - Double Machine Learning
+  **すべて観測できていれば**、補正する方法がいくつかある
+  - Classical Methods
+    - 傾向スコア(propensity score) / IPW(inversed propensity weighting)
+  - Machine Learning Methods
+    - Meta Learner / Double Machine Learning
 
 ![](./images/Causal_unconfoundedness.png)
 
@@ -72,17 +85,56 @@
 ---
 
 ## ランダム実験ができないケース
-- 割り付けがランダムにならない。
-  - 割り付け通りにユーザが思い通りの行動をとってくれない。
-- 割り付けを考えずに収集されたデータを使って分析する
-  - 観察研究(observational study)と呼ばれる
+- いつもA/Bテストができればよいが、できない場合も多い
+  - 割り付けがランダムにならない。
+    - 割り付け通りにユーザが思い通りの行動をとってくれない。
+  - 割り付けを考えずに収集されたデータを使って分析する
+    - 観察研究(observational study)と呼ばれる
+
+---
+## 反実仮想(counterfactual)
+- 処置をした人($T=1$)は、処置をした場合の結果($Y_1$)がわかる
+- 処置をしなかった人($T=0$)は、処置をしなかった場合($Y_0$)の結果がわかる
+- 全員に対する処置の効果は、全員について
+  - 処置をした場合の結果がわかる必要がある。
+  - 処置をしなかった場合の結果がわかる必要がある。
+- 実験していない部分についても、結果がわかる必要がある。
+  - 「もし実験していたらどのような結果が得られるだろう？」
+    - **反実仮想(counterfactual)**
 
 ---
 
-## 
-このような場合に見たい効果
-- ATE : Average Treatment Effect
-- CATE : Average Treatment Effect
+## 処置効果(treatment Effect)の計算
+- 処置効果(treatment effect)の計算方法は複数ある
+  - ATE : Average Treatment Effect
+  - CATE : Average Treatment Effect
+  - ITE : Indivisual Treatment Effect
+
+---
+## ATE (Average Treatment Effect)
+- 実験をした全員について処置をした結果としなかった結果の差の期待値
+
+---
+## CATE (Conditional Average Treatment Effect)
+- 実験をした人で条件を満たす人についての、平均処置効果
+
+---
+## ITE (Indivisual Treatment Effect)
+- 個人ごとの $Y_1 - Y_0$ の期待値
+  - どうやったらそんなものが計算できる？
+    - Meta Learner または Double Machine Learning を使うことができる。
+
+---
+## Lift Chart
+
+
+---
+## Upliftを最大化する手順
+- まず観測データを集める
+- 適切にCausal Graphを設定し、Treatment$T$/Outcome$Y$/Confounders $X$を区別
+- これに基づいて、Causal Modelを学習する
+- ITEの高い順にソートした効果を出す
+- 実運用に回す
 
 ---
 
@@ -96,16 +148,16 @@
 ---
 
 ## Causal Inferenceの道具
-- 確率モデル
-- 傾向スコア法
+- 古典的手法
+  - 傾向スコア法 (Propensity Score)
+  - 傾向スコア逆数重みづけ (Inversed Propensity Score Weighing)
 - 機械学習手法
   - Meta Learner
+    - [CausalML](https://github.com/uber/causalml) (Uber) で  
+      Meta Learnerの手法を多数実装している。
   - Double Machine Learning
-- 機械学習手法を実装したpython package
-  - [CausalML](https://github.com/uber/causalml) (Uber)
-    - Meta Learnerの手法を多数実装している。
-  - [EconML](https://github.com/microsoft/EconML) (Microsoft)
-    - Double Machine Learning の手法を実装している。
+    - [EconML](https://github.com/microsoft/EconML) (Microsoft) で
+      Double Machine Learning の手法を実装している。
 
 ---
 
