@@ -41,14 +41,14 @@
 
 ---
 
-## 因果推論と効果的な費用投下
+## 処置効果(Treatment Effect)
 - 広告(treatment)が不要なケースがある
   - 広告がなくても商品を買う人がいる(Always-taker)
   - 広告があっても商品を買わない人がいる(Never-taker)
 - 本当に広告が必要なユーザとは  **広告がないと商品を買わないが、**  
   **広告があると買う場合。**(Persuadable)
 - 処置(treatment)があることで  結果変数(outcome)の期待値が上昇するか知りたい
-  - この上昇を**処置効果(Treatment Effect)**または**アップリフト(Uplift)**という
+  - この変化を**処置効果(Treatment Effect)**または**アップリフト(Uplift)**という
 
 ![](./images/Causal_matrix.png)
 
@@ -102,48 +102,41 @@
   - 「もし実験していたらどのような結果が得られるだろう？」
     - **反実仮想(counterfactual)**
 
+![](./images/Causal_Effect_Counterfactual.png)
+
 ---
 
 ## 処置効果(treatment Effect)の計算
-- 処置効果(treatment effect)の計算方法は複数ある
+- 処置効果(treatment effect)の考え方は、いろいろある。
   - ATE : Average Treatment Effect
-  - CATE : Average Treatment Effect
   - ITE : Indivisual Treatment Effect
+  - CATE : Conditional Average Treatment Effect
 
 ---
 ## ATE (Average Treatment Effect)
-- 実験をした全員について処置をした結果としなかった結果の差の期待値
+- 処置をした結果としなかった結果の差の全員の期待値
+  - 傾向スコアを使う方法でわかる。
+  - (例) 広告でユーザ全体の購入のUpliftを推定できる
+    - 全体で効果があったのかはわかるが、  
+      どのような人で効果があったのかはわからない。
 
----
-## CATE (Conditional Average Treatment Effect)
-- 実験をした人で条件を満たす人についての、平均処置効果
+![](./images/Causal_Effect_ATE.png)
 
 ---
 ## ITE (Indivisual Treatment Effect)
 - 個人ごとの $Y_1 - Y_0$ の期待値
-  - どうやったらそんなものが計算できる？
-    - Meta Learner または Double Machine Learning を使うことができる。
+  - これは普通はわからない。
+
+![](./images/Causal_Effect_ITE.png)
 
 ---
-## Lift Chart
+## CATE (Conditional Average Treatment Effect)
+- ある条件を満たす人の、処置による効果の差の期待値
+  - Meta Learner または Double Machine Learning でわかる。
+  - (例) 広告でUpliftが高くなるようなユーザ属性を特定できる
+      - Upliftが高い属性を持つユーザだけ広告を出すことができる。
 
-
----
-## Upliftを最大化する手順
-- まず観測データを集める
-- 適切にCausal Graphを設定し、Treatment$T$/Outcome$Y$/Confounders $X$を区別
-- これに基づいて、Causal Modelを学習する
-- ITEの高い順にソートした効果を出す
-- 実運用に回す
-
----
-
-## Tutorialで説明されている例
-- 会員登録
-  - 登録をコントロールできない
-- Web広告の出稿
-  - 不特定多数の人に見せることになるので、
-- ..
+![](./images/Causal_Effect_CATE.png)
 
 ---
 
@@ -159,64 +152,99 @@
     - [EconML](https://github.com/microsoft/EconML) (Microsoft) で
       Double Machine Learning の手法を実装している。
 
----
-
-## Meta Learner の方法
-- C Learner 
-- 似たような考えで ...-Learnerが多数ある。
 
 ---
 
-## Double Machine Learaning の方法
-- 特徴
-  - まったく違う発想を使う
-  - 基本となる式
-  - treatmentの推定式
-    - つまり treatment が交絡因子によって依存することを
-      モデル化する。
-- それぞれ D, Y の推定式は任意の方法を使ってもよいとされる。
-- さらに treatment effect にも任意の式が使える。
-  - 理論的裏付けも多数ある。
+## 手法を適用するためのシンプルな前提
+- outcome $Y$ と treatment $T$ の両方に影響を与える  
+  交絡因子(confounders) $X$ がすべて観測できている (Unconfoundedness)  
+  場合に、$X$ が観測できた前提での CATE を算出する様々な方法が使える。
+- このような前提で集めた（実験した）データを  
+  モデルで学習して、CATEを推定する。
+
+![](./images/Causal_unconfoundedness.png)
+
 
 ---
 
-## CATEの評価
-- C-Learner の場合
-- Double Machine Learning の場合
-  - R-Learner というものとににていて。
+## Meta-Learner
+![](./images/Causal_MetaLearner_Overview.png)
 
 ---
 
-## Instrument Variableが存在する場合
-- 2SLS または DR IV という方法のどちらかがある。
-  - ちょっとややこしい。
+## CausalML による CATE 算出
+![](./images/Causal_CausalML_CATE.png)
 
 ---
 
-## AUCCという評価
+## Double Machine Learning
+![](./images/Causal_EconML_DML.png)
 
 ---
 
-## サンプル
+## EconML による CATE 算出
+![](./images/Causal_EconML_CATE.png)
 
 ---
 
-## 実業務で利用することを考える場合
-- 一部のユーザに対して実施したモデルで CATE推定用のモデルを構築する
-- Upliftが最大となるところで、
+## Lift Chart
+- サンプルごとのCATEを高い順にソートすれば、  
+  Upliftが高いほうから処置した時の全体でのUpliftがわかる。
+  - これを図示したものが Lift Chart
+
+![](./images/Causal_CATE_sort.png)
+
 
 ---
 
-## Tutorialガイド
-- Tutorialを見てみよう
-  - CausalMLの例はとても分かりやすい : Web広告
-  - EconMLの例は難しい。
+## Lift Chart
+- CATEの総和を縦軸にして、CATEの高いほうからプロットしたグラフ
+- このカーブの下側面積が AUUC (Area Under Uplift Curve)
+- このカーブとランダムの場合のカーブと間の面積が Qini Coefficient
+
+![](./images/Causal_Lift_Chart.png)
+
+---
+
+## Uplift Tree
+- Upliftの高い/低い人を分ける属性を見つける
+  - Classification Treeと違って、Upliftをtargetにしている。
+- 図は、CausalMLのUplift Tree
+  - EconMLでも同様のTreeの機能がある。
+
+![](./images/Causal_Uplift_Tree.png)
+
+---
+
+
+## Tutorialで説明されている例
+- Web広告の出稿
+  - Uberの利用者に対してUber Eatsの広告を見せて、
+    Uber Eatsの利用率が上がるかどうか
+  - Uber利用者に対して、さらに広告を出すことで、
+    Uberの利用がさらに増加するか？
+- 会員登録
+  - TripAdvisorへ登録させることで、
+    TripAdvisorの利用率が上がるか？
+      - 非常にコントロールが難しい実験であり、
+        Sign Upを簡単にする操作(Instrument)を使っている。
+
+---
+## Web広告における適用結果
+- Uberの広告Upliftで、CATEが高い60%に対して広告を出すことで、
+  ROAS(獲得合計/コスト合計)は 6.46 -> 12.5 に改善したといっている。
+
+![](./images/Causal_Uber_ROAS.png)
 
 ---
 
 ## 印象
-- ただし実際には難しい
-  - 因果グラフを事前に洗い出しておく必要あり。
-    - 観測値と制御因子以外の交絡因子・操作変数などを
-      洗い出しておく必要あり。
-  - 手法の正しい理解が必要
+- CATEの算出手法により、Upliftの高い対象だけを狙い撃ちした  
+  施策を出すことが可能になると考えらえる。
+  - (例) 特定ユーザ向け優遇サービスを出す対象を絞る
+  - (例) Web広告の出稿対象者を絞る
+- ただし実際の適用は注意を要する
+  - Unconfoundednessを満たすように、outcomeとtreatmentに対して
+    親として影響を与える交絡因子(confounders)を可能な限り  
+    すべて洗い出す  必要がある。
+  - 手法・因果グラフの正しい理解が適用に必須
