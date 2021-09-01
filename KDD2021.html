@@ -143,6 +143,7 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -283,8 +284,8 @@
 </ul>
 <h3 id="概要-11">概要</h3>
 <p>レコメンドにおけるPopularity Biasの除外を因果推論の立場から考えた研究。 手法として、Factorization Machineとその亜種の改善が念頭にある。</p>
-<p>User Embedding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math> とUser Response <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math> の両方に対して、 Item Groupへの直近の接触の多さという交絡因子が存在するため、 Popularity Biasが発生するという因果を仮定するところが出発点。</p>
-<p>ここから、User Embedding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math> や、Item Embedding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math> とは独立に 「Item Group滞在分布」という変数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> を FM モデルに入れて、 交絡因子の無効化(Deconfounding)を実施する DecRS を提案。 実際には、Item GroupごとのEmbedding <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> を作って、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>,</mo><mi>I</mi><mo>,</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">U,I,M</annotation></semantics></math>の 3つ組でモデルの中に組み込むという形をとる。</p>
+<p>User Embedding <span class="math inline">\(U\)</span> とUser Response <span class="math inline">\(Y\)</span> の両方に対して、 Item Groupへの直近の接触の多さという交絡因子が存在するため、 Popularity Biasが発生するという因果を仮定するところが出発点。</p>
+<p>ここから、User Embedding <span class="math inline">\(U\)</span> や、Item Embedding <span class="math inline">\(I\)</span> とは独立に 「Item Group滞在分布」という変数 <span class="math inline">\(D\)</span> を FM モデルに入れて、 交絡因子の無効化(Deconfounding)を実施する DecRS を提案。 実際には、Item GroupごとのEmbedding <span class="math inline">\(M\)</span> を作って、<span class="math inline">\(U,I,M\)</span>の 3つ組でモデルの中に組み込むという形をとる。</p>
 <p><img src="./images/KDD2021/Deconfounded.png" /></p>
 <p>交絡因子の仮定までは理解だが、その後の取り扱い方が因果推論系では あまり一般的なやり方でないように見えるので、これで交絡因子を考慮した 因果推論として成立しているのかがよくわからない。手法を適用した後の 効果推定が通常のnDCGになっているのも、これで妥当なのかが疑問。 ただしシンプルなので、実運用には使いやすそう。</p>
 <p>効果が表れやすいuserとして、Item Groupの季節変動が著しいuserへの 効果が表れやすいという話が面白い指摘に思った。 (レコメンド結果で行動に対してバイアスがかかりやすい人ほど popularity bias補正の効果が出やすいという指摘)</p>
@@ -304,5 +305,37 @@
 <p><img src="./images/KDD2021/TimeSHAP.png" /></p>
 <p>この手順を、実際の（おそらくポルトガルに拠点がある）銀行のトランザクションの GRUによる（おそらく異常利用の）判別モデルに適用し、どの時刻のどの特徴量が 判別に影響があるかを算出できたといっている。</p>
 <p>ADS Track (Industrial Track相当)での発表なので、 実業務への適用実績に力点があり、技術的に新しい何かがある報告ではないが、 比較的シンプルな工夫でうまく効果を出せているように見える。</p>
+<h2 id="amazon-sagemaker-clarify-machine-learning-bias-detection-and-explainability-in-the-cloud">Amazon SageMaker Clarify: Machine Learning Bias Detection and Explainability in the Cloud</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467177">論文</a></li>
+<li><a href="https://aws.amazon.com/jp/sagemaker/clarify/">Amazon SageMaker Clarify のページ</a></li>
+</ul>
+<h3 id="概要-13">概要</h3>
+<p>Amazon SageMakerにdeployしたモデルと、学習に用いたデータセットを使って、 モデルに含まれる (バイアスがかかりがちな事前指定した特定の属性に対する) バイアスの定量化と、予測根拠となる説明結果を与える Amazon SageMaker Clarify というサービスについての紹介。</p>
+<p>学習データ自体の偏り(Pre-Training Metrics)と、学習後のモデルが出力する 予測結果が持つ偏り(Post-Training Metrics)を測定、 Pre-Training ではCI/DPL/CDDL, Post-Training では DPPL/DI/DCA/AD/RD/DAR/TE/CDDPI といった指標が使われるらしい（割と単純な計算式で与えられるものが多い）</p>
+<p>予測結果の説明ではKernelSHAPが使われるとのこと。</p>
+<p>いずれもこれと言って目新しいものはないが、deployしたモデルの モニタリング目的で利用できるサービスであるという主張。</p>
+<h2 id="a-hyper-surface-arrangement-model-of-ranking-distributions">A hyper-surface arrangement model of ranking distributions</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467253">論文</a></li>
+<li><a href="https://github.com/shizuo-kaji/rankLearning">実装</a> : Chainerを使った実装になっている。</li>
+</ul>
+<h3 id="概要-14">概要</h3>
+<p>九大の鍛冶静雄さんのグループの発表。</p>
+<p>アイテムのランキングデータが与えられているときに、このランキングに 最も適合するような多次元空間上の埋め込みを与えるようなアルゴリズムを 考えたという話。Plackett-Luceなどのように1変量にする前提のものは多いが、 ここでは多次元の埋め込みを得られることが利点。</p>
+<p>ランキング対象となるアイテム1つが空間上の1点に対応していて、 かつ、空間上の1点がランキング1つに対応しており、その点に近い順に ランキングが生成されると考える。そのため、アイテムに対応する点で 空間をVoronoi分割すると、Voronoi分割された領域で同一のランキングが 生成される理屈となっている。</p>
+<p>神嶌さんの<a href="https://www.kamishima.net/sushi/">寿司データセット</a>に対して適用した結果が報告されていて、 マグロ系の寿司が概ね同じ地位を占めたり、かっぱ巻きなどが遠くに位置するなど、 概ねデータの全体の傾向を表すような埋め込みベクトルを得ることができるとのこと。</p>
+<p><img src="./images/KDD2021/HyperSurfaceArrangement.png" /></p>
+<p>数値検証では、ランキングの上位部分観測から、下位ランキングの推定などが できるという報告があり、ランキングデータが与えられている場合のレコメンド などに使えるのではと思った（どういう業種であればランキングデータがあるのかな…）</p>
+<h2 id="debiasing-learning-based-cross-domain-recommendation">Debiasing Learning based Cross-domain Recommendation</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467067">論文</a></li>
+<li>実装はない。</li>
+</ul>
+<p>Cross-domain Recommendation といった場合、ユーザが共通する 全く別のデータセットでのレコメンドにおいて、共通ユーザの情報を 互いに使いあうことで精度を高めあうという意味合いが強い。</p>
+<p>しかし利用者がオーバーラップするような、2つのネットショッピングサイトで、 まったく同じユーザが、それぞれのサイトで全く別の行動をとることが実際にあり、 これをどのように補正するか？という中国のTaobaoからの報告。</p>
+<p>因果グラフにおいて、ドメインに特化した交絡因子(DSC)、共通の交絡因子(GC) を考える。DSCとして考えられるのが、サイトの性質を表す変数であり、 これによって user embeddings(<span class="math inline">\(\boldsymbol{v}_u\)</span>) も、購入(<span class="math inline">\(y\)</span>)も影響を 受けると考えて IPS (傾向スコア逆数スコアリング) でレコメンドの損失に 重みづけをして学習するなどし、バイアス補正の形でドメイン間でのユーザ行動の変化を 吸収したという話。その他いくつかの工夫がある。 評価においては、FM/Wide&amp;Deep/DeepFMに対して提案法を適用し、 従来の Cross-domain Recommendation 手法より精度改善したとのこと。</p>
+<p><img src="./images/KDD2021/DebiasingCrossDomainRecSys.png" /></p>
+<p>本当にうまくいったのであれば素晴らしいが、 この結果を出すまでに因果を整理できるかが肝なのだろうと思われ、 実践は難しいだろうなという印象を持った。</p>
 </body>
 </html>
