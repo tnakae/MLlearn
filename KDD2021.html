@@ -337,5 +337,26 @@
 <p>因果グラフにおいて、ドメインに特化した交絡因子(DSC)、共通の交絡因子(GC) を考える。DSCとして考えられるのが、サイトの性質を表す変数であり、 これによって user embeddings(<span class="math inline">\(\boldsymbol{v}_u\)</span>) も、購入(<span class="math inline">\(y\)</span>)も影響を 受けると考えて IPS (傾向スコア逆数スコアリング) でレコメンドの損失に 重みづけをして学習するなどし、バイアス補正の形でドメイン間でのユーザ行動の変化を 吸収したという話。その他いくつかの工夫がある。 評価においては、FM/Wide&amp;Deep/DeepFMに対して提案法を適用し、 従来の Cross-domain Recommendation 手法より精度改善したとのこと。</p>
 <p><img src="./images/KDD2021/DebiasingCrossDomainRecSys.png" /></p>
 <p>本当にうまくいったのであれば素晴らしいが、 この結果を出すまでに因果を整理できるかが肝なのだろうと思われ、 実践は難しいだろうなという印象を持った。</p>
+<h1 id="learning-to-embed-categorical-features-without-embedding-tables-for-recommendation">Learning to Embed Categorical Features without Embedding Tables for Recommendation</h1>
+<ul>
+<li><a href="https://virtual.2021.kdd.org/paper_Research_Track-92.html">論文</a></li>
+<li>実装はない。</li>
+</ul>
+<p>Recommendationにおいて、User/Itemの数が非常に多い場合、 単純なMatrix FactorizationでもEmbedidngテーブルが巨大になる。 これを回避するための方法としてハッシュ関数を使う方法が近年 多数提案されているが collision 問題が解決されていない。</p>
+<p>これを解決するために、Deep Hash Embedding (DHE) という 方法を考えた。これはUser ID/Item ID (巨大な整数を想定) から1000個くらいのハッシュ化された(小さな範囲の)整数を生成し、 これらを単に実数の範囲に正規化する。この正規化されたベクトルを、 多層Denseを通してEmbeddingを作り、ここからRecommendationモデルを （Denseの学習も併せて）学習するという流れ。</p>
+<p><img src="./images/KDD2021/DeepHashEmbedding.png" /></p>
+<p>パラメータ数で比較すると、他の手法に比べて精度が高いと言っているのが 本当だとすると、アイデアがシンプルにもかかわらずいい結果を出していて なかなか素晴らしいのだが、容易に想像できるように計算コストが高く、 素のEmbeddingと比べて10倍以上時間がかかると言っている。 （GPUでboostできると言っているが、この点は苦しいと言わざるを得ない）</p>
+<p>というわけで、研究としては生煮え感がぬぐえないが、他のfeature を混ぜ込むことが容易であるので、このアイデアをベースにした 改良手法がやってくるのではという点で、今後が期待される。</p>
+<h2 id="discrete-choice-models-with-interpretable-context-effects">Discrete Choice Models with Interpretable Context Effects</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467250">論文</a></li>
+<li><a href="https://github.com/tomlinsonk/feature-context-effects">実装</a></li>
+</ul>
+<h3 id="概要-15">概要</h3>
+<p>離散選択モデル(Discrete Choice Model)では、最もシンプルには 多項ロジットを使うモデリングが行われるのだが、仮定として IIA(independence of irrelevant alternatives ; 無関係な選択肢からの独立性) が成り立つ必要がある((wikipedia)[https://en.wikipedia.org/wiki/Independence_of_irrelevant_alternatives])が 一般にはこの仮定は成り立たない。例えば、3つの商品があったときに 常に真ん中ぐらいの商品が選択されやすいとかいう現象が起きたりする。 (compromiseというらしい)</p>
+<p>このような、他の選択肢の傾向を context として変数に組み込み context を考慮したモデルは以前にも提案されてきたが、今回の提案は、 これを Linear で入れたモデル(Linear Context Logit ; LCL)と、 およびそれを線形混合したモデル(Decomposed Linear Context Logit ; CLCL) とする。基本的にitem featureとcoefficientの線形モデルなのだが、 item featureの平均ベクトルを context として入れ、coefficientに対する contextの影響を行列として入れるというモデル。</p>
+<p><img src="./images/KDD2021/LinearContextLogit.png" /></p>
+<p>離散選択モデル向けのベンチマークデータセットと、グラフにおける 隣接ノード選択問題（この場合は、エッジを構成した時の三角関係の数とか、 InEdge数とかがfeatureとなる）に適用した精度が従来法よりも高いとの指摘。 実装もある。</p>
+<p>離散選択モデルの話は古くからある話題で、このような線形モデルで Contextを入れるという改良が今までなかったのが不思議なくらいにシンプル だが、しっかり精度を上げてきている真面目な研究である。</p>
 </body>
 </html>
