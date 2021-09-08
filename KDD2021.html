@@ -155,20 +155,33 @@
 <h2 id="are-we-really-making-much-progress-revisiting-benchmarking-and-refining-heterogeneous-graph-neural-networks">Are we really making much progress?: Revisiting, benchmarking and refining heterogeneous graph neural networks</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467350">論文</a></li>
+<li><a href="https://github.com/THUDM/HGB">実装およびデータセット</a></li>
 </ul>
 <h3 id="概要">概要</h3>
 <p>Heterogeneous Graph Neural Network (HGNN) のベンチマークデータセットである <a href="https://github.com/THUDM/HGB">Heterogeneous Graph Benchmark (HGB)</a> を整備した。</p>
-<p>このレポジトリで、3つのタスクの、全部で11のデータセットを使い、 これまで公開された複数の手法を使って精度比較をした報告</p>
+<p>このレポジトリで、3つのタスクの、全部で11のデータセットを使い、 これまで公開された複数の手法を使って精度比較をした報告である。</p>
 <p>Are we really making much progress? はいわずもがな MaurizioFD氏による Are We Really Making Much Progress? A Worrying Analysis of Recent Neural Recommendation Approaches が念頭にあり、Graph Neural Network の最近の進展を批判的に 取り上げた論文である。</p>
-<p>様々な手法が最近提案されているが、これまでの手法の中で 最も精度が高かったのは、ほとんどがGATという初期の方法のケースで、 さらにGATを若干拡張した手法である、Simple-HGNという（単純な）手法が 最も精度が高かったという報告となっている。</p>
+<p>様々な手法が最近提案されているが、これまでの手法の中で 最も精度が高かったのは、ほとんどのデータセット/タスクに対して GAT(Graph Attention Network)という、比較的初期に提案された手法を使う場合である と指摘したうえで、著者らはGATを若干拡張した手法である、Simple-HGNという （単純な）手法を考え、結局この手法が、すべてのデータセット/タスクにおいて 最も精度が高かった、という結果を出しており、結局これまでの研究で 進歩はあったのだろうか？ を問う報告となっている。</p>
+<p><img src="./images/KDD2021/AreWeReallyGCN.png" /></p>
+<p>以後、HGNN系の研究は、彼らのベンチマークデータセットでの 検証結果が基準になっていくのだろう、という気概を感じる報告である。</p>
 <h2 id="learning-based-proximity-matrix-factorization-for-node-embedding">Learning Based Proximity Matrix Factorization for Node Embedding</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467296">論文</a></li>
 <li>実装がない。</li>
 </ul>
 <h3 id="概要-1">概要</h3>
-<p>Node Embedding の算出方法の提案。Lameneという名前。 Personalized PageRank におけるスタートに戻る確率を、各時刻において 一律でない値を採用し、これを学習するもの。 学習には、Differentiable SVD を採用する。PyTorchを利用。 ただし計算コストが高く、コストがかからないような工夫があるため、 ロジックが若干ややこしい。</p>
-<p>計算した結果得られる Node Embedding による各タスクの精度は 他の手法よりも高い。既存の手法で最も高いものとして STRAP という 手法があるらしい。</p>
+<p>Node Embedding の算出手法として、</p>
+<ol type="1">
+<li>まず、Network上のRandom Walkをして、到達確率から Node間の similarity matrix を算出</li>
+<li>算出された similarity 行列を分解し、ノードのembeddingを算出</li>
+</ol>
+<p>というステップを踏む手法が多数ある。</p>
+<p>これらのステップで、similarity の計算では Personalized PageRank(PPR; 起点のノードから出発して、ある確率<span class="math inline">\(\alpha\)</span>で起点に戻る場合の 他のノードの滞在率を起点ノードとのsimilarityと考える PageRank の変種) を使うケースが多く、行列分解では SVD が使われることが多い。</p>
+<p>この場合 PPR のパラメータ <span class="math inline">\(\alpha\)</span> は Node Embedding を適用する タスク(Link Prediction / Node Classification など)によって最適な パラメータが異なるので、現在のタスクのloss関数が最小となるように similarityのパラメータ<span class="math inline">\(\alpha\)</span>を最適化できるようにする手法を 考えたという報告。この手法を Lemane と呼んでいる。</p>
+<p>この手法では PPR <span class="math inline">\(\to\)</span> SVD <span class="math inline">\(\to\)</span> embedding <span class="math inline">\(\to\)</span> loss function という流れにおいて、SVDで微分可能なもの(differential SVD) を使うのが特徴的。PyTorchで筆者らは実装。Training の流れを以下に示す。</p>
+<p><img src="./images/KDD2021/Lemane.png" /></p>
+<p>ただし計算コストが高く、コストがかからないような工夫があるため、 ノードをsub-samplingするなど、ロジックが若干ややこしい。 (上のTrainingとは別に記載がある)</p>
+<p>計算した結果得られる Node Embedding による各タスクの精度は 他の手法よりも高いと報告している。既存の手法で最も高いものとして 同じく PPR(の改良版)+SVD という構成の <a href="https://arxiv.org/abs/1905.07245">STRAP</a> という手法が取り上げられている。</p>
 <h2 id="signed-graph-neural-network-with-latent-groups">Signed Graph Neural Network with Latent Groups</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467355">論文</a></li>
@@ -183,7 +196,16 @@
 </ul>
 <h3 id="概要-3">概要</h3>
 <p>Graph Propagation に基づく Node Representation の手法として、 Personalized PageRank (PPR), heat kernel, Katz などの手法があるが これらを統合したうえで、さらに近似計算で高速化した改良手法の提案</p>
-<p>各種手法との精度・計算時間の比較グラフを見ると、 既存手法より10倍前後程度速くて、かつ既存手法より若干精度が劣る 程度にとどめられるとのこと。</p>
+<p>それぞれの手法は、整理すると、</p>
+<ol type="1">
+<li><span class="math inline">\(i-\)</span>Step後の確率に適用する重み</li>
+<li>伝播させる情報</li>
+<li>伝播の式</li>
+</ol>
+<p>の違いですべて説明でき、これらの違いを1つのモデルに集約して パラメータの値の違いで、任意のモデルになるようにできるような 手法(のはず、ちゃんと理解できていない…)としてまとめることが できるが、そのモデルをまじめに解くことは困難なので、これを 近似することで現実的な計算時間内に収まるようにした手法である Approximate Graph Propagation (AGP) を提案している。</p>
+<p><img src="./images/KDD2021/AGP.png" /></p>
+<p>各種手法との精度・計算時間の比較グラフを見ると、 どのようなタスクにおいても、既存手法より10倍前後程度速くて、 かつ既存手法より若干精度が劣る程度にとどめられるとのこと。</p>
+<p><img src="./images/KDD2021/AGP_error.png" /></p>
 <h2 id="maximizing-influence-of-leaders-in-social-networks">Maximizing Influence of Leaders in Social Networks</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467229">論文</a></li>
