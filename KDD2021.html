@@ -502,5 +502,54 @@
 <p>このタスクを単純回帰モデル、Graph Embeddingを用いないRNNモデル、 少し発展させたモデル、などと比較し、提案法(Ahead)が最も精度が 高い結果が出たと言っている。 （ただし精度評価結果を見ると、GRUだけでもかなりの精度があるようにみえる）</p>
 <p><img src="./images/KDD2021/AttentiveHGE_result.png" /></p>
 <p>話の流れは非常にきれいであり、実運用に回ったのであれば素晴らしいが、 実装がみつからないので、この点なんとも判断が難しい。</p>
+<h2 id="network-experimentation-at-scale">Network Experimentation at Scale</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467091">論文</a></li>
+<li>事例紹介であり、実装はない。</li>
+</ul>
+<h3 id="概要-23">概要</h3>
+<p>Facebookの分析部隊が実施した、ネットワーク上のユーザの 相互影響を加味した大規模A/Bテストの分析報告について。</p>
+<p>A/Bテストが正しく機能するためには、対象ユーザ以外の割り当て によって対象ユーザの行動が左右されないことが必要である。 これはSUTVA(stable unit treatment value assumption)という 仮定であるが、Facebookではサービスの性質上、他のユーザから 相互影響が出てしまうため、何も考えないA/BテストはSUVTAの仮定 が成立しないことが多い。これを実験における干渉(interference) もしくはネットワーク効果(network effect)と呼ばれる。</p>
+<p>本論文では、このような干渉を受けない実験計画の方法と、 その前提で実施された計画でも残ってしまう相互影響を除外する 補正方法の提案が含まれている。</p>
+<p>干渉影響をなくすA/B割り付けとして、次の2つの方法が提案されている。</p>
+<ol type="1">
+<li>クラスタリングの結果得られるクラスタごとの割り付け</li>
+<li>相互干渉が弱まる属性ごとの割り付け</li>
+</ol>
+<p>ネットワーククラスタリングの方法として、BP(<a href="https://arxiv.org/abs/1707.06665">Kabiljo+ 2017</a>)という方法と、 Louvain(<a href="https://arxiv.org/abs/0803.0476">Blondel+ 2008</a>)という方法が提案されているが、 補正の際に、クラスタサイズが均等になるのが望ましいことから、 BPを使ったほうがよいとされている（ただしFacebookの実例ではLouvainとなっているが…）</p>
+<p>また、問題によっては、地域で分けるのも一案とされている。 これはFacebookでは、Facebook上での職探しサービス(Job on Facebook)での 施策評価では、地域外でのマッチングが生じにくいことから、 居住地・勤務地単位での割り付けを実施したとしている。</p>
+<p>このように割り付けたあとでも、SUTVAの仮定をクリアしているかを チェックしているかを確認し補正することが必要であるとしている。</p>
+<p>ここで Trigger Logging(<a href="https://content.linkedin.com/content/dam/engineering/site-assets/pdfs/ABTestingSocialNetwork_share.pdf">Ya Xu+, KDD2015</a>) と呼ばれる考え方を使い、A/Bテスト割り付け可能な 状況が発生した瞬間(これをTriggerと呼ぶ)で、割り付けを実施し、 Triggerが発生した事実とその割り当て結果を記録しておく。</p>
+<p>クラスタごと割り当てによるA/Bテストが正しく機能するためには、 SUVTAが成り立たなくても、少なくとも次の点が必須であるとされている。</p>
+<ol type="1">
+<li>Triggerが発生するかどうかは、他のユーザのA/B割り付けに依存しない。</li>
+<li>Triggerが発生しなかったユーザの outcome は、他のユーザのA/B割り付けに依存しない。</li>
+</ol>
+<p>この条件が成立する場合に、クラスタごとでのoutcomeの合計の全クラスタ平均を、 クラスタ内のサンプル数の全クラスタ平均で割ったものを使って、クラスタごと 割り当てA/Bテストの結果を使える、といっている。</p>
+<p>さらに評価誤差を小さくできる regression adjustment という方法もある。</p>
+<p>具体例として、次の評価を Facebook で実施した事例を紹介している。</p>
+<ul>
+<li>FacebookでのUI変更テスト(Louvainによって構築したクラスタごとの割り当てを利用)</li>
+<li>Job on Facebookで、まだ求職者から応募がないJobを上位に出す施策の効果検証 (地域別でのA/Bテスト)
+<ul>
+<li>特にこの場合では、単純なA/Bでは施策がoverestimateだったとしており、 クラスタごとのA/B評価により、それを補正できたとしている(以下の表)</li>
+</ul></li>
+</ul>
+<p><img src="./images/KDD2021/NetworkExperimentAtScale.png" /></p>
+<h2 id="preference-amplification-in-recommender-systems">Preference Amplification in Recommender Systems</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467298">論文</a></li>
+<li>実装は見つからない。</li>
+</ul>
+<h3 id="概要-24">概要</h3>
+<p>レコメンドがユーザの好みを助長することで、ネットワーク内のユーザに 極端に好みが偏った集団ができてしまう現象が、最近 Filter bubble であったり、 Echo Chamber であったりというような用語で報告されている。</p>
+<p>本研究は、一人のユーザに対して継続的にレコメンドを繰り返す 実験を実施した場合に、そのユーザのレコメンド結果がどのように変化するか という点について報告した研究。Facebookの研究者も名を連ねていて、 実際にFacebookでの実験報告もある。</p>
+<p>モデルとしては、User/Item embedding が存在し、inner productをスコアと考え、 スコアのsoftmaxを確率にしてランダムにアイテムを選択するrecommenderを使い、 クリックする場合には、モデル側がもつuser embeddingを SGD で update する。 ユーザ側の好みも、少しずつレコメンドされるアイテムが好きになるようなdrift を持つメカニズムを考え、その後どうなるか？を見た。</p>
+<p>この場合に、Userのembeddingは、徐々に大きくなっていき、ユーザが特に好きな アイテムをよりrecommenderが出力するようになり、ユーザはさらにそのアイテムを 好きになるというecho chamber的な傾向を出すことができた。</p>
+<p><img src="./images/KDD2021/Amplification.png" /></p>
+<p>この実験で、特にecho chamber的な挙動をするユーザはuser embeddingのノルムが どんどん大きくなる傾向にある、という傾向も見出すことができ、対策として、 echo chamber的な挙動がひどいと考えれられるユーザについて、embeddingの 方向を維持したままノルムを小さくする対応が考えられる。</p>
+<p>実際に、Facebookで問題になるギリギリの画像（ただし削除対象ではないもの） へのアクセスが非常に多いユーザに対して、レコメンドモデルの user embedding の ノルムを 1/10 倍にする対応に効果があるか？を検証するA/Bテストを実施すると、 対象画像へのアクセスが、処置群において有意に減少したとのこと。 （個人的には、この検証結果を載せているのが、すごいと考える）</p>
+<p>Discussion において、echo chamber化しているかどうかをノルムから判断する ための閾値を定量的に出せないかが将来課題であるという点に言及している。</p>
+<p><img src="./images/KDD2021/Amplification_facebook.png" /></p>
 </body>
 </html>
