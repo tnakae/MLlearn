@@ -466,5 +466,41 @@
 <p>今回提案手法では、DEという手法において、hard clutering をしていたところ、soft clustering にしてクラスタへの所属確率を計算し、 この重みを使ったクラスタ内類似度行列に関する損失と、 各データ点のhint regressionによる損失の重み付き和が最小となるに 学習する(Hierarchical Topology Distillation ; HTD という名前)</p>
 <p><img src="./images/KDD2021/HTD_image.png" /></p>
 <p>提案法は、ベースラインstudentモデルと比較して、nDCG@20で、20%前後 の改善が見られた、としている。embeddingサイズを1/10に減らした場合 には、さすがにTeacherモデルより劣化するものの、比較的高い精度を 維持したモデルを再構成できている。</p>
+<h2 id="fast-and-memory-efficient-tucker-decomposition-for-answering-diverse-time-range-queries">Fast and Memory-Efficient Tucker Decomposition for Answering Diverse Time Range Queries</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467290">論文</a></li>
+<li><a href="https://datalab.snu.ac.kr/zoomtucker/">実装を公開している著者のページ</a></li>
+</ul>
+<h3 id="概要-21">概要</h3>
+<p>この論文が、<a href="http://seoilai.jp/jap/sub/news_view.jsp?idx=448">Best Research Paperを受賞した</a>とのこと （オンラインでの発表を見逃した。公式発表がどこにもないのだが..）</p>
+<p>通常 Tucker 分解という場合、複数の属性が紐づく属性値の観測に 時刻が付与されるケースが多く、時刻を含めて3-4次元の変量にがあり、 これを分解することが多い。この Tucker 分解を改良した新しい手法である ZOOM-Tuckerを提案。</p>
+<p>観測データに時刻が加わると、計算量が多くかかってしまう。 そのため、計算量を落とす工夫として、事前に固定の時間長でデータを 分割しておき、この分割されたブロックごとにあらかじめ Tucker 分解しておく。 事後で、分析したい時間範囲が決まったら、このブロックをつなぎ合わせて、 粗い計算結果を精緻化するための iteration を回して最終結果を得る。 （この精緻化のiterationの計算過程がややこしくて、私には追えない…）</p>
+<p><img src="./images/KDD2021/ZoomTucker.png" /></p>
+<p>この2段階による計算で、従来法による計算よりも10-100倍程度計算を 高速化できたと言っている。ただし提案法の意味合いからして、これは 全時間領域の計算を一度にやることを諦めた（あとまわしにした）ことによる 短縮が大きいとみるべきであろう。</p>
+<p>具体的な応用として、短時間での分解結果と長時間での分解結果から、 それぞれ元のデータを再構成したときの誤差を比較することで得られる 外れ値指標を使った外れ値検出や、株価時系列が特定期間において変動が同期する傾向 がある類似銘柄を見つける分析などが挙げられている。</p>
+<p><img src="./images/KDD2021/ZoomTucker_example.png" /></p>
+<h2 id="attentive-heterogeneous-graph-embedding-for-job-mobility-prediction">Attentive Heterogeneous Graph Embedding for Job Mobility Prediction</h2>
+<ul>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467388">論文</a></li>
+<li>実装はなさそう</li>
+</ul>
+<h3 id="概要-22">概要</h3>
+<p>端的に言うと、転職履歴から次の会社とポジションを当てるモデルを実装する話。 データとしてLinkedInのデータを利用。 事前分析として集計した結果のサマリが書いてあり、これが興味深い。</p>
+<ol type="1">
+<li>業務ポジション名につくfunction word (software engineer であれば software が fuction word)について、会社ごとに、その会社が持つ すべてのfunction word についての binary vectorを構築すると 転職前後での会社のbinary vectorの相関は平均で 0.6376 となり高い。</li>
+<li>転職で違う会社に行く場合でも、ポジションに共通の語が入る ケースが全体の60%</li>
+<li>転職先の会社は、転職前の会社のポジションと同じポジションを もっている会社に転職する割合が全体の85%を超える。 同様に転職先でのポジションは、転職前の会社が持っている ポジションである割合が85%を超える。</li>
+</ol>
+<p>つまり、転職前後での会社・ポジションは、相互に似た関係がある場合が多い。 これらの事前分析の結果から、当該研究者は、</p>
+<ul>
+<li>会社から会社への転職ネットワーク</li>
+<li>ポジションからポジションへの転職ネットワーク</li>
+<li>ある人が同時に所属する会社・ポジションのネットワーク</li>
+</ul>
+<p>から Graph 上を情報伝播させることで Node Embedding を算出することで、 会社・ポジションの意味を表す Embedding を算出し、その Embedding を 入力とした RNN(GRU) で転職時系列をモデル化して、次の転職先での 会社・ポジションを予測することがふさわしいと考えた。</p>
+<p><img src="./images/KDD2021/AttentiveHGE.png" /></p>
+<p>このタスクを単純回帰モデル、Graph Embeddingを用いないRNNモデル、 少し発展させたモデル、などと比較し、提案法(Ahead)が最も精度が 高い結果が出たと言っている。 （ただし精度評価結果を見ると、GRUだけでもかなりの精度があるようにみえる）</p>
+<p><img src="./images/KDD2021/AttentiveHGE_result.png" /></p>
+<p>話の流れは非常にきれいであり、実運用に回ったのであれば素晴らしいが、 実装がみつからないので、この点なんとも判断が難しい。</p>
 </body>
 </html>
