@@ -152,7 +152,7 @@
 <header id="title-block-header">
 <h1 class="title">KDD2021報告</h1>
 </header>
-<h2 id="are-we-really-making-much-progress-revisiting-benchmarking-and-refining-heterogeneous-graph-neural-networks">Are we really making much progress?: Revisiting, benchmarking and refining heterogeneous graph neural networks</h2>
+<h2 id="no.01-are-we-really-making-much-progress-revisiting-benchmarking-and-refining-heterogeneous-graph-neural-networks">No.01 : Are we really making much progress?: Revisiting, benchmarking and refining heterogeneous graph neural networks</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467350">論文</a></li>
 <li><a href="https://github.com/THUDM/HGB">実装およびデータセット</a></li>
@@ -164,7 +164,7 @@
 <p>様々な手法が最近提案されているが、これまでの手法の中で 最も精度が高かったのは、ほとんどのデータセット/タスクに対して GAT(Graph Attention Network)という、比較的初期に提案された手法を使う場合である と指摘したうえで、著者らはGATを若干拡張した手法である、Simple-HGNという （単純な）手法を考え、結局この手法が、すべてのデータセット/タスクにおいて 最も精度が高かった、という結果を出しており、結局これまでの研究で 進歩はあったのだろうか？ を問う報告となっている。</p>
 <p><img src="./images/KDD2021/AreWeReallyGCN.png" /></p>
 <p>以後、HGNN系の研究は、彼らのベンチマークデータセットでの 検証結果が基準になっていくのだろう、という気概を感じる報告である。</p>
-<h2 id="learning-based-proximity-matrix-factorization-for-node-embedding">Learning Based Proximity Matrix Factorization for Node Embedding</h2>
+<h2 id="no.02-learning-based-proximity-matrix-factorization-for-node-embedding">No.02 : Learning Based Proximity Matrix Factorization for Node Embedding</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467296">論文</a></li>
 <li>実装がない。</li>
@@ -182,16 +182,16 @@
 <p><img src="./images/KDD2021/Lemane.png" /></p>
 <p>ただし計算コストが高く、コストがかからないような工夫があるため、 ノードをsub-samplingするなど、ロジックが若干ややこしい。 (上のTrainingとは別に記載がある)</p>
 <p>計算した結果得られる Node Embedding による各タスクの精度は 他の手法よりも高いと報告している。既存の手法で最も高いものとして 同じく PPR(の改良版)+SVD という構成の <a href="https://arxiv.org/abs/1905.07245">STRAP</a> という手法が取り上げられている。</p>
-<h2 id="signed-graph-neural-network-with-latent-groups">Signed Graph Neural Network with Latent Groups</h2>
+<h2 id="no.03-signed-graph-neural-network-with-latent-groups">No.03 : Signed Graph Neural Network with Latent Groups</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467355">論文</a></li>
 <li><a href="https://github.com/haoxin1998/GS-GNN">実装</a> … まだ公開されていない感じ。</li>
 </ul>
 <h3 id="概要-2">概要</h3>
 <p>敵・味方のネットワークで、node representation を得ようという話。 「味方の味方は味方」「敵の敵は味方」となっているように友達関係が 構成されるという “balance theory” (バランス理論) に基づいて愚直に representation を構成しようとすると破綻するので、ある程度グループ にまとめてしまい、グループ内で representation が似ていて、 そこから敵・味方関係の矛盾が少なくなるように representation を 算出するアルゴリズム GS-GNN を構成した。</p>
-<h2 id="approximate-graph-propagation">Approximate Graph Propagation</h2>
+<h2 id="no.04-approximate-graph-propagation">No.04 : Approximate Graph Propagation</h2>
 <ul>
-<li><a href="https://dl.acm.org/doi/pdf/10.1145/3447548.3467243">論文</a></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467243">論文</a></li>
 <li><a href="https://github.com/wanghzccls/">著者github</a> … ただし実装がない</li>
 </ul>
 <h3 id="概要-3">概要</h3>
@@ -206,7 +206,7 @@
 <p><img src="./images/KDD2021/AGP.png" /></p>
 <p>各種手法との精度・計算時間の比較グラフを見ると、 どのようなタスクにおいても、既存手法より10倍前後程度速くて、 かつ既存手法より若干精度が劣る程度にとどめられるとのこと。</p>
 <p><img src="./images/KDD2021/AGP_error.png" /></p>
-<h2 id="maximizing-influence-of-leaders-in-social-networks">Maximizing Influence of Leaders in Social Networks</h2>
+<h2 id="no.05-maximizing-influence-of-leaders-in-social-networks">No.05 : Maximizing Influence of Leaders in Social Networks</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467229">論文</a></li>
 <li><a href="https://github.com/kedges/kedges">実装</a></li>
@@ -215,7 +215,7 @@
 <p>二極化した世論(0/1)で、人々の意見は身近な知り合いの意見の平均で 決まる、とするネットワーク上のダイナミクスモデル（これを一般的に Leader-Follower DeGroot Modelというらしい）が与えられたときに、 初期条件として1の意見をもつ人達(leaders)から、0の意見を持つ人たち (follower)に対して、任意にedgeをつないでいい時に、その本数が固定の 場合に、最もダイナミクスを無限回回した時の1の意見を持つ人の割合 が最大になるようなedgeの結び方の提案。</p>
 <p>このようなedgeの選び方は submodular 性をもつので、greedy に選択 しても、ある程度精度が担保でき、かつ、1本追加で選んだ時の 1の割合は、逆行列を使った更新式 (Sherman-Morrison formula) で 更新できる。</p>
 <p>Julia を使った実装が存在する。</p>
-<h2 id="minirocket-a-very-fast-almost-deterministic-transform-for-time-series-classification">MiniRocket: A Very Fast (Almost) Deterministic Transform for Time Series Classification</h2>
+<h2 id="no.06-minirocket-a-very-fast-almost-deterministic-transform-for-time-series-classification">No.06 : MiniRocket: A Very Fast (Almost) Deterministic Transform for Time Series Classification</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467231">論文</a></li>
 <li><a href="https://github.com/angus924/minirocket">実装</a></li>
@@ -227,9 +227,9 @@
 <p>先行する手法の Rocket と似ているが、乱数を使わない決定的手法。 Rocketと比較して精度を維持しつつ75倍速くなったといっている。</p>
 <p><img src="./images/KDD2021/MiniRocket_vs_Rocket.png" /></p>
 <p>KDDに先行してすでに実装があったらしい。 sklearnと親和性が高そうであり、使い勝手がよさそう。 時系列データに対する判別モデルなどのタスクが出たら ぜひ試してみたい。</p>
-<h2 id="a-broader-picture-of-random-walk-based-graph-embedding">A Broader Picture of Random-walk Based Graph Embedding</h2>
+<h2 id="no.07-a-broader-picture-of-random-walk-based-graph-embedding">No.07 : A Broader Picture of Random-walk Based Graph Embedding</h2>
 <ul>
-<li><a href="https://dl.acm.org/doi/abs/10.1145/3447548.3467300">論文</a></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467300">論文</a></li>
 <li><a href="https://github.com/zexihuang/random-walk-embedding">実装</a></li>
 </ul>
 <h3 id="概要-6">概要</h3>
@@ -251,7 +251,7 @@
 </ul>
 <p>その他、3つの要素いずれについても、タスクごとにどちらが優れて いるかはタスクによって変わるので、タスクによってそれぞれの要素 のどれがいいか選択するべきである、という趣旨である。</p>
 <p>Graph Embedding については、上の “Approximate Graph Propagation” と同じく、手法がかなり発散していて、このような整理学が求められて いるという雰囲気がある。</p>
-<h2 id="where-are-we-in-embedding-spaces-a-comprehensive-analysis-on-network-embedding-approaches-for-recommender-systems">Where are we in embedding spaces? A Comprehensive Analysis on Network Embedding Approaches for Recommender Systems</h2>
+<h2 id="no.08-where-are-we-in-embedding-spaces-a-comprehensive-analysis-on-network-embedding-approaches-for-recommender-systems">No.08 : Where are we in embedding spaces? A Comprehensive Analysis on Network Embedding Approaches for Recommender Systems</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467421">論文</a>, <a href="https://arxiv.org/abs/2105.08908">arxiv</a></li>
 <li><a href="https://github.com/RinneSz/Social-Collaborative-Metric-Learning">実装</a></li>
@@ -267,7 +267,7 @@
 <p>「データの密度が低い」は、行列密度が、0.01%-0.1%程度のスケールを指している。 MovieLensは100k-1Mは、4-6%程度であり、密度が高いケースになる。</p>
 <p>実際にSocial Network で、これらの仮定が当てはまるような CMLの拡張手法 SCML と hyperbolic 化した HSCMF を提案し 確かに従来法よりも精度が改善することを確認。 ただし計算コストが高いので、注意したほうがいいというコメント。</p>
 <p>レコメンドタスクでは、hyperbolic化により精度改善ができるケースが 比較的限られているので注意したほうがいいという指摘に見えた。</p>
-<h2 id="newsembed-modeling-news-through-pre-trained-document-representations">NewsEmbed: Modeling News through Pre-trained Document Representations</h2>
+<h2 id="no.09-newsembed-modeling-news-through-pre-trained-document-representations">No.09 : NewsEmbed: Modeling News through Pre-trained Document Representations</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467392">論文</a></li>
 <li>実装はない。
@@ -287,16 +287,16 @@
 <p><img src="./images/KDD2021/NewsEmbed_multitask.png" /></p>
 <p>単にcontrastive learning するだけではなく、 multitaskにして精度を高めたりするあたりの工夫が光る。</p>
 <p>またデータをクロールする際に、記事の時刻と、 記事についた画像のembeddingsにより、記事の同一性を担保するなど、 データの集め方やラベルのつけ方が素晴らしい。パイプラインの構成など、 学習システムの構築など非常に鮮やかな感じがする。</p>
-<h2 id="triplet-attention-rethinking-the-similarity-in-transformers">Triplet Attention: Rethinking the similarity in Transformers</h2>
+<h2 id="no.10-triplet-attention-rethinking-the-similarity-in-transformers">No.10 : Triplet Attention: Rethinking the similarity in Transformers</h2>
 <ul>
-<li><a href="https://dl.acm.org/doi/abs/10.1145/3447548.3467241">論文</a></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467241">論文</a></li>
 <li><a href="https://github.com/zhouhaoyi/TripletAttention">実装</a> … これを書いた時点では <em>We will release the code soon.</em> となっている</li>
 </ul>
 <h3 id="概要-9">概要</h3>
 <p>Transformers モデルの Self-Attention の部分で、 Query,Key,Value のKeyの部分にKey1,Key2と拡張する。 この際に、Key1,Key2のOuter-productとQueryとのinner productが 大きい場合に値が大きいとする考え方。このようにすると文脈ごとに 意味が異なる表現を取り込めるという話らしい。</p>
 <p><img src="./images/KDD2021/Triplet_Attention.png" /></p>
 <p>ただしこの機構を取り入れて改善できた差分はあまりそこまで 大きくないし、定性的に何か新しいことが抽出できるという わけでもなさそうなので、あまりインパクトがないのではという印象。</p>
-<h2 id="efficient-data-specific-model-search-for-collaborative-filtering">Efficient Data-specific Model Search for Collaborative Filtering</h2>
+<h2 id="no.11-efficient-data-specific-model-search-for-collaborative-filtering">No.11 : Efficient Data-specific Model Search for Collaborative Filtering</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467399">論文</a></li>
 <li>実装はみあたらない。</li>
@@ -305,7 +305,7 @@
 <p>Collaborative Filteringを改良した手法は、Embeddingの算出や inner productの算出部分に改良が加わっているという違いがあるだけ なので、これらを適用する/しないをデータごとにパラメータチューニング することで、データごとに特化した最適手法を抽出できるという前提で 組まれたレコメンド向け自動モデルチューニング機構についての報告。</p>
 <p><img src="./images/KDD2021/Efficient_RS.png" /></p>
 <p>心躍るタイトルで読み始めたのだが、前提として、Xiangnan He の <a href="https://arxiv.org/abs/1708.05031">Neural Collaborative Filtering</a> の精度が高いことを期待しているのだが、残念ながら NCF は Steffen Rendle さんが<a href="https://dl.acm.org/doi/10.1145/3383313.3412488">RecSys2020で、シンプルなMatrix Factorizationより精度が低い</a> というかなり辛らつだが確からしい実験報告が存在するあるので、この手の論文も Matrix Factorization 系のモデルについてチューニングが正しくされているか 怪しい感じがある。コンセプトは理解するが結果については信憑性に欠くのでは というのが素朴な印象。</p>
-<h2 id="deconfounded-recommendation-for-alleviating-bias-amplification">Deconfounded Recommendation for Alleviating Bias Amplification</h2>
+<h2 id="no.12-deconfounded-recommendation-for-alleviating-bias-amplification">No.12 : Deconfounded Recommendation for Alleviating Bias Amplification</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467249">論文</a></li>
 <li><a href="https://github.com/WenjieWWJ/DecRS">実装</a></li>
@@ -318,7 +318,7 @@
 <p>交絡因子の仮定までは理解だが、その後の取り扱い方が因果推論系では あまり一般的なやり方でないように見えるので、これで交絡因子を考慮した 因果推論として成立しているのかがよくわからない。手法を適用した後の 効果推定が通常のnDCGになっているのも、これで妥当なのかが疑問。 ただしシンプルなので、実運用には使いやすそう。</p>
 <p>効果が表れやすいuserとして、Item Groupの季節変動が著しいuserへの 効果が表れやすいという話が面白い指摘に思った。 (レコメンド結果で行動に対してバイアスがかかりやすい人ほど popularity bias補正の効果が出やすいという指摘)</p>
 <p>Xiangnan He さんはこの方向性に舵を切ってきたらしい。。</p>
-<h2 id="timeshap-explaining-recurrent-models-through-sequence-perturbations">TimeSHAP: Explaining Recurrent Models through Sequence Perturbations</h2>
+<h2 id="no.13-timeshap-explaining-recurrent-models-through-sequence-perturbations">No.13 : TimeSHAP: Explaining Recurrent Models through Sequence Perturbations</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467166">論文</a></li>
 <li>実装は見当たらない</li>
@@ -333,7 +333,7 @@
 <p><img src="./images/KDD2021/TimeSHAP.png" /></p>
 <p>この手順を、実際の（おそらくポルトガルに拠点がある）銀行のトランザクションの GRUによる（おそらく異常利用の）判別モデルに適用し、どの時刻のどの特徴量が 判別に影響があるかを算出できたといっている。</p>
 <p>ADS Track (Industrial Track相当)での発表なので、 実業務への適用実績に力点があり、技術的に新しい何かがある報告ではないが、 比較的シンプルな工夫でうまく効果を出せているように見える。</p>
-<h2 id="amazon-sagemaker-clarify-machine-learning-bias-detection-and-explainability-in-the-cloud">Amazon SageMaker Clarify: Machine Learning Bias Detection and Explainability in the Cloud</h2>
+<h2 id="no.14-amazon-sagemaker-clarify-machine-learning-bias-detection-and-explainability-in-the-cloud">No.14 : Amazon SageMaker Clarify: Machine Learning Bias Detection and Explainability in the Cloud</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467177">論文</a></li>
 <li><a href="https://aws.amazon.com/jp/sagemaker/clarify/">Amazon SageMaker Clarify のページ</a></li>
@@ -343,7 +343,7 @@
 <p>学習データ自体の偏り(Pre-Training Metrics)と、学習後のモデルが出力する 予測結果が持つ偏り(Post-Training Metrics)を測定、 Pre-Training ではCI/DPL/CDDL, Post-Training では DPPL/DI/DCA/AD/RD/DAR/TE/CDDPI といった指標が使われるらしい（割と単純な計算式で与えられるものが多い）</p>
 <p>予測結果の説明ではKernelSHAPが使われるとのこと。</p>
 <p>いずれもこれと言って目新しいものはないが、deployしたモデルの モニタリング目的で利用できるサービスであるという主張。</p>
-<h2 id="a-hyper-surface-arrangement-model-of-ranking-distributions">A hyper-surface arrangement model of ranking distributions</h2>
+<h2 id="no.15-a-hyper-surface-arrangement-model-of-ranking-distributions">No.15 : A hyper-surface arrangement model of ranking distributions</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467253">論文</a></li>
 <li><a href="https://github.com/shizuo-kaji/rankLearning">実装</a> : Chainerを使った実装になっている。</li>
@@ -355,7 +355,7 @@
 <p>神嶌さんの<a href="https://www.kamishima.net/sushi/">寿司データセット</a>に対して適用した結果が報告されていて、 マグロ系の寿司が概ね同じ地位を占めたり、かっぱ巻きなどが遠くに位置するなど、 概ねデータの全体の傾向を表すような埋め込みベクトルを得ることができるとのこと。</p>
 <p><img src="./images/KDD2021/HyperSurfaceArrangement.png" /></p>
 <p>数値検証では、ランキングの上位部分観測から、下位ランキングの推定などが できるという報告があり、ランキングデータが与えられている場合のレコメンド などに使えるのではと思った（どういう業種であればランキングデータがあるのかな…）</p>
-<h2 id="debiasing-learning-based-cross-domain-recommendation">Debiasing Learning based Cross-domain Recommendation</h2>
+<h2 id="no.16-debiasing-learning-based-cross-domain-recommendation">No.16 : Debiasing Learning based Cross-domain Recommendation</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467067">論文</a></li>
 <li>実装はない。</li>
@@ -365,7 +365,7 @@
 <p>因果グラフにおいて、ドメインに特化した交絡因子(DSC)、共通の交絡因子(GC) を考える。DSCとして考えられるのが、サイトの性質を表す変数であり、 これによって user embeddings(<span class="math inline">\(\boldsymbol{v}_u\)</span>) も、購入(<span class="math inline">\(y\)</span>)も影響を 受けると考えて IPS (傾向スコア逆数スコアリング) でレコメンドの損失に 重みづけをして学習するなどし、バイアス補正の形でドメイン間でのユーザ行動の変化を 吸収したという話。その他いくつかの工夫がある。 評価においては、FM/Wide&amp;Deep/DeepFMに対して提案法を適用し、 従来の Cross-domain Recommendation 手法より精度改善したとのこと。</p>
 <p><img src="./images/KDD2021/DebiasingCrossDomainRecSys.png" /></p>
 <p>本当にうまくいったのであれば素晴らしいが、 この結果を出すまでに因果を整理できるかが肝なのだろうと思われ、 実践は難しいだろうなという印象を持った。</p>
-<h2 id="learning-to-embed-categorical-features-without-embedding-tables-for-recommendation">Learning to Embed Categorical Features without Embedding Tables for Recommendation</h2>
+<h2 id="no.17-learning-to-embed-categorical-features-without-embedding-tables-for-recommendation">No.17 : Learning to Embed Categorical Features without Embedding Tables for Recommendation</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467304">論文</a></li>
 <li>実装はない。</li>
@@ -375,7 +375,7 @@
 <p><img src="./images/KDD2021/DeepHashEmbedding.png" /></p>
 <p>パラメータ数で比較すると、他の手法に比べて精度が高いと言っているのが 本当だとすると、アイデアがシンプルにもかかわらずいい結果を出していて なかなか素晴らしいのだが、容易に想像できるように計算コストが高く、 素のEmbeddingと比べて10倍以上時間がかかると言っている。 （GPUでboostできると言っているが、この点は苦しいと言わざるを得ない）</p>
 <p>というわけで、研究としては生煮え感がぬぐえないが、他のfeature を混ぜ込むことが容易であるので、このアイデアをベースにした 改良手法がやってくるのではという点で、今後が期待される。</p>
-<h2 id="discrete-choice-models-with-interpretable-context-effects">Discrete Choice Models with Interpretable Context Effects</h2>
+<h2 id="no.18-discrete-choice-models-with-interpretable-context-effects">No.18 : Discrete Choice Models with Interpretable Context Effects</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467250">論文</a></li>
 <li><a href="https://github.com/tomlinsonk/feature-context-effects">実装</a></li>
@@ -386,7 +386,7 @@
 <p><img src="./images/KDD2021/LinearContextLogit.png" /></p>
 <p>離散選択モデル向けのベンチマークデータセットと、グラフにおける 隣接ノード選択問題（この場合は、エッジを構成した時の三角関係の数とか、 InEdge数とかがfeatureとなる）に適用した精度が従来法よりも高いとの指摘。 実装もある。</p>
 <p>離散選択モデルの話は古くからある話題で、このような線形モデルで Contextを入れるという改良が今までなかったのが不思議なくらいにシンプル だが、しっかり精度を上げてきている真面目な研究である。</p>
-<h2 id="data-poisoning-attack-against-recommender-system-using-incomplete-and-perturbed-data">Data Poisoning Attack against Recommender System Using Incomplete and Perturbed Data</h2>
+<h2 id="no.19-data-poisoning-attack-against-recommender-system-using-incomplete-and-perturbed-data">No.19 : Data Poisoning Attack against Recommender System Using Incomplete and Perturbed Data</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467233">論文</a></li>
 <li>実装はない。</li>
@@ -398,7 +398,7 @@
 <p><img src="./images/KDD2021/DataPoisoningAttack.png" /></p>
 <p>この生成モデルを使う方法(RAPU-G)と、もう少し簡易な方法(RAPU-P)が 提案されていて、ベンチマークではRAPU-Gの性能が良く、5%攻撃ユーザで 対象アイテムのHR@50を20-50%にすることができたと言っている。</p>
 <p>もっともらしいモデルと結果なのだが、実装もなく、モデルの記述も 誤記と思われる部分が多いようなので、そこまでうまくいくのかな… という感じもある。論文には先行手法との比較もあるので、 そのReferenceとしても使えるかもしれない。</p>
-<h2 id="large-scale-subspace-clustering-via-k-factorization">Large-Scale Subspace Clustering via k-Factorization</h2>
+<h2 id="no.20-large-scale-subspace-clustering-via-k-factorization">No.20 : Large-Scale Subspace Clustering via k-Factorization</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467267">論文</a></li>
 <li><a href="https://github.com/jicongfan/K-Factorization-Subspace-Clustering">実装</a> : MatLabであるが…</li>
@@ -412,7 +412,7 @@
 <p>対象データは、MNISTなどの画像や、EEGなどの時空間データ測定値など denseなものが対象であり、次元については100-150次元で強みがあるらしい。 （画像などもPCAを事前に実施して低次元化して使うことが前提） レコメンド業界などSparseなものには向かない手法にみえる。</p>
 <p><img src="./images/KDD2021/Large-k-Factorization-result.png" /></p>
 <p>実装は、MatLabしかないのが残念だが、比較的簡易な更新式の繰り返しで 書けるようなので、他の言語に書き直すのも容易そう。</p>
-<h2 id="scalable-hierarchical-agglomerative-clustering">Scalable Hierarchical Agglomerative Clustering</h2>
+<h2 id="no.21-scalable-hierarchical-agglomerative-clustering">No.21 : Scalable Hierarchical Agglomerative Clustering</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467404">論文</a></li>
 <li>実装は公開されていない。</li>
@@ -430,9 +430,9 @@
 <p>通常のdendrogramと違って、nearest neighbor から結合することを あきらめているので処理の分散ができ、大規模化・高速化ができる という理屈らしい。このような考え方は Dirichlet Process を使う DP-Meansという手法と類似点があり、その考察もある。</p>
 <p>報告では、小規模データセットで従来のクラスタリング手法 SOTA達成 という点に加えて、大規模データセット(30 billions!) のクラスタリングを 実施して、ユーザクエリ(いまいち詳細がわからないが、Webサービスの 検索クエリと思われ、featureはユーザの行動などを指標化したもの らしいが詳細は記載がなく不明。低次元でdenseなfeatureと思われる)の クラスタリングを実施した結果を記載している。報告にクエリの クラスタリング結果から階層構造が取り出せているという趣旨の図がある。 Hierarchical Clustering を大規模化するのは、このようにデータから 階層構造を取り出して意味を抽出したいという動機もあるらしい。</p>
 <p><img src="./images/KDD2021/HierarchicalClustering_result.png" /></p>
-<h2 id="why-attentions-may-not-be-interpretable">Why Attentions May Not Be Interpretable?</h2>
+<h2 id="no.22-why-attentions-may-not-be-interpretable">No.22 : Why Attentions May Not Be Interpretable?</h2>
 <ul>
-<li><a href="">論文</a></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3447548.3467307">論文</a></li>
 <li>実装は見つからない</li>
 </ul>
 <h3 id="概要-19">概要</h3>
@@ -449,7 +449,7 @@
 <p>この2つの改善を適用すると、Attentionを使ったテキスト判別モデルの 説明手法である <a href="https://arxiv.org/abs/1802.07814">L2X</a> という手法の説明結果の精度を 大幅に改善できたといっている （ただし、この改善がない手法では <a href="https://arxiv.org/abs/2006.05379">AIL(Adversarial Infidelity Learning)</a>という手法のほうが 精度が高い傾向にある、という結果も出ている）</p>
 <p><img src="./images/KDD2021/Attention_result.png" /></p>
 <p>つまり、Attentionを使った理由説明を実施する場合、 筆者が combinatorial shortcut と呼んでいる現象を回避するため Attention 部分の学習に対して対策を実施する必要がある</p>
-<h2 id="topology-distillation-for-recommender-system">Topology Distillation for Recommender System</h2>
+<h2 id="no.23-topology-distillation-for-recommender-system">No.23 : Topology Distillation for Recommender System</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467319">論文</a></li>
 <li><a href="https://github.com/SeongKu-Kang/Topology_Distillation_KDD21">実装</a></li>
@@ -466,7 +466,7 @@
 <p>今回提案手法では、DEという手法において、hard clutering をしていたところ、soft clustering にしてクラスタへの所属確率を計算し、 この重みを使ったクラスタ内類似度行列に関する損失と、 各データ点のhint regressionによる損失の重み付き和が最小となるに 学習する(Hierarchical Topology Distillation ; HTD という名前)</p>
 <p><img src="./images/KDD2021/HTD_image.png" /></p>
 <p>提案法は、ベースラインstudentモデルと比較して、nDCG@20で、20%前後 の改善が見られた、としている。embeddingサイズを1/10に減らした場合 には、さすがにTeacherモデルより劣化するものの、比較的高い精度を 維持したモデルを再構成できている。</p>
-<h2 id="fast-and-memory-efficient-tucker-decomposition-for-answering-diverse-time-range-queries">Fast and Memory-Efficient Tucker Decomposition for Answering Diverse Time Range Queries</h2>
+<h2 id="no.24-fast-and-memory-efficient-tucker-decomposition-for-answering-diverse-time-range-queries">No.24 : Fast and Memory-Efficient Tucker Decomposition for Answering Diverse Time Range Queries</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467290">論文</a></li>
 <li><a href="https://datalab.snu.ac.kr/zoomtucker/">実装を公開している著者のページ</a></li>
@@ -479,7 +479,7 @@
 <p>この2段階による計算で、従来法による計算よりも10-100倍程度計算を 高速化できたと言っている。ただし提案法の意味合いからして、これは 全時間領域の計算を一度にやることを諦めた（あとまわしにした）ことによる 短縮が大きいとみるべきであろう。</p>
 <p>具体的な応用として、短時間での分解結果と長時間での分解結果から、 それぞれ元のデータを再構成したときの誤差を比較することで得られる 外れ値指標を使った外れ値検出や、株価時系列が特定期間において変動が同期する傾向 がある類似銘柄を見つける分析などが挙げられている。</p>
 <p><img src="./images/KDD2021/ZoomTucker_example.png" /></p>
-<h2 id="attentive-heterogeneous-graph-embedding-for-job-mobility-prediction">Attentive Heterogeneous Graph Embedding for Job Mobility Prediction</h2>
+<h2 id="no.25-attentive-heterogeneous-graph-embedding-for-job-mobility-prediction">No.25 : Attentive Heterogeneous Graph Embedding for Job Mobility Prediction</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467388">論文</a></li>
 <li>実装はなさそう</li>
@@ -502,7 +502,7 @@
 <p>このタスクを単純回帰モデル、Graph Embeddingを用いないRNNモデル、 少し発展させたモデル、などと比較し、提案法(Ahead)が最も精度が 高い結果が出たと言っている。 （ただし精度評価結果を見ると、GRUだけでもかなりの精度があるようにみえる）</p>
 <p><img src="./images/KDD2021/AttentiveHGE_result.png" /></p>
 <p>話の流れは非常にきれいであり、実運用に回ったのであれば素晴らしいが、 実装がみつからないので、この点なんとも判断が難しい。</p>
-<h2 id="network-experimentation-at-scale">Network Experimentation at Scale</h2>
+<h2 id="no.26-network-experimentation-at-scale">No.26 : Network Experimentation at Scale</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467091">論文</a></li>
 <li>事例紹介であり、実装はない。</li>
@@ -536,7 +536,7 @@
 </ul></li>
 </ul>
 <p><img src="./images/KDD2021/NetworkExperimentAtScale.png" /></p>
-<h2 id="preference-amplification-in-recommender-systems">Preference Amplification in Recommender Systems</h2>
+<h2 id="no.27-preference-amplification-in-recommender-systems">No.27 : Preference Amplification in Recommender Systems</h2>
 <ul>
 <li><a href="https://dl.acm.org/doi/10.1145/3447548.3467298">論文</a></li>
 <li>実装は見つからない。</li>
