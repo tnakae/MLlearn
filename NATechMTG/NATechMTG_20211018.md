@@ -7,21 +7,23 @@
 - Title
   - Negative Interactions for Improved Collaborative Filtering  
     Don't go Deeper, go Higher
-    - [PDF Can be freely download from ACM Digital library](https://dl.acm.org/doi/10.1145/3460231.3474273)!
+    - [PDF can be freely downloaded from ACM Digital library](https://dl.acm.org/doi/10.1145/3460231.3474273)!
 - Authors
-  - Harald Steck (NetFlix)
+  - Harald Steck (Netflix)
     - [EASE](https://arxiv.org/abs/1905.03375) (WWW2019)
     - [ADMM SLIM](https://dl.acm.org/doi/10.1145/3336191.3371774) (WSDM2020)
     - [EDLAE](https://proceedings.neurips.cc/paper/2020/hash/e33d974aae13e4d877477d51d8bafdc4-Abstract.html) (NIPS2020)
-  - Dawen Liang (NetFlix)
+  - Dawen Liang (Netflix)
     - [Mult-VAE](https://arxiv.org/abs/1802.05814) (WWW2018)
 
 ---
 
 ## RecSys2019での批判
-- **Are We Really Making Much Progress?**  
+- [Dacrema MF](https://mauriziofd.github.io/)+,  
+  **Are We Really Making Much Progress?**  
   **A Worrying Analysis of Recent Neural Recommendation Approaches**
-  - Best Paper in RecSys2019 ([arxiv](https://arxiv.org/abs/1907.06902))
+  - Best Paper in RecSys2019 ([arxiv](https://arxiv.org/abs/1907.06902), [github](https://github.com/MaurizioFD/RecSys2019_DeepLearning_Evaluation))
+  - [Revised in 2021](https://arxiv.org/abs/1911.07698)
 - Summary:
   - Collaborative Filtering で Deep を使った論文が、単純な手法に負ける
   - 負ける理由
@@ -30,7 +32,8 @@
 - 有効であるとされた単純な手法
   - Random Walk ($P^3 \alpha$, $RP^3 \beta$)
   - SLIM
-  - MultVAE (by Dawen Liang)
+  - MultVAE (by Liang)
+  - EASE (by Steck) in revised paper
 
 ---
 
