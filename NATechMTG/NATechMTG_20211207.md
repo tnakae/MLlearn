@@ -1,6 +1,6 @@
 ---
 marp: true
-
+math: katex
 ---
 
 # な組 Tech MTG : 2021-12-07
@@ -11,7 +11,7 @@ marp: true
 <!-- footer: な組 Tech MTG : 2021-12-07 -->
 
 ## NeurIPS 2021
-- 現在開催中 (12/06-12/12)
+- 現在開催中 (12/06-12/14)
   - [Official Website](https://nips.cc/Conferences/2021)
   - 全てオンラインで、費用を払えばオンラインで
     すべての講演を見ることができる (やや迷い中...)
