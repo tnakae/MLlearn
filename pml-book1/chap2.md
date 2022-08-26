@@ -18,8 +18,8 @@ img[alt~="center"] {
 - Discrete / Continuous
   - $X$ is **discrete rv** $\Longleftrightarrow$ $\mathcal{X}$ is finite/countably infinite
     - **Probability mass fuction** (pmf) : $p(x) := \mathrm{Pr}(X=x)$
-  - $X$ is **continuoius rv** $\Longleftrightarrow$ $\mathcal{X} \in \mathbb{R}$
-    - **Cumulative distribution fuction** (cmf) : $P(x) := \mathrm{Pr}(X \le x)$
+  - $X$ is **continuoius rv** $\Longleftrightarrow$ $\mathcal{X} = \mathbb{R}$
+    - **Cumulative distribution fuction** (cdf) : $P(x) := \mathrm{Pr}(X \le x)$
     - **Probability densitry function** (pdf) : $p(x) := \frac{d}{dx}P(x)$
 
 ---
@@ -56,8 +56,8 @@ img[alt~="center"] {
 ### 2.2.5 Moments of a distribution
 
 - **mean** / **expected value**
-  - for discrete rv : $\displaystyle \mathbb{E}[X] := \int_{\mathcal{X}} x p(x) dx$
-  - for continuous rv : $\displaystyle \mathbb{E}[X] := \sum_{x \in \mathcal{X}} x p(x) dx$
+  - for discrete rv : $\displaystyle \mathbb{E}[X] := \sum_{x \in \mathcal{X}} x p(x) dx$
+  - for continuous rv : $\displaystyle \mathbb{E}[X] := \int_{\mathcal{X}} x p(x) dx$
 - **variance** (often denoted by $\sigma^2$)
   - $\mathbb{V}[X] := \mathbb{E}[(X - \mu)^2]$
   - **standard deviation** : $\mathrm{std}[X] := \sqrt{\mathbb{V}[X]} = \sigma$
