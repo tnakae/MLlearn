@@ -5,10 +5,15 @@ img[alt~="center"] {
 }
 </style>
 
-# Research MTG (2022-09-07 / nakae)
-- 対象論文
+# Research MTG
+## 2022-09-07 / nakae
+- 今回の対象論文
   - Don't recommend the obvious: Estimate probability ratios
   - Pellegrini+ (RecSys2022)
+
+---
+
+## RecSys?
 
 ---
 
@@ -24,7 +29,7 @@ img[alt~="center"] {
 - Item 接触時系列が与えられた時に、次の時刻(以降)で
   接触すると考えられる Item を予測する問題設定
 
-![width:750px center](./images/RecRatio_SeqRec_Image.png)
+![width:600px center](./images/RecRatio_SeqRec_Image.png)
 
 ---
 
@@ -35,7 +40,10 @@ img[alt~="center"] {
   - BERT4Rec (based on transformer)
     - SOTAと言われているが詳細なbenchmarkに基づく批判がある
       - See: [arxiv/2207.07483](https://arxiv.org/abs/2207.07483)
-- SASRec(左) vs BERT4Rec(右) (↑このbenchmark論文から)
+
+---
+### (Cont.)
+- SASRec(左) vs BERT4Rec(右) (benchmark論文から)
 ![width:750px center](./images/RecRatio_SeqRec_Algorithm.png)
 
 ---
