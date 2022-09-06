@@ -8,20 +8,28 @@ img[alt~="center"] {
 # Research MTG
 ## 2022-09-07 / nakae
 - 今回の対象論文
-  - Don't recommend the obvious: Estimate probability ratios
+  - [Don't recommend the obvious: Estimate probability ratios](https://www.amazon.science/publications/dont-recommend-the-obvious-estimate-probability-ratios)
   - Pellegrini+ (RecSys2022)
 
 ---
 
 ## RecSys?
 
+- RecSys = ACM Conference on **Rec**ommender **Sys**tems
+  - Recommenderに関する(最も大きな)国際学会 (毎年9月に実施)
+  - ACM Digital Library でまもなく Proceeding が無料公開(1ヶ月程度)
+
+![width:400px center](./images/RecRatio_RecSys2022.png)
+
 ---
 
 ## Summary
 - Sequential Recommendation における改良の1つ
 - 学習の際に、item popularityを使って negative sampling をすると
-  PMI (pointwise mutual information) が最大のものを
-  レコメンドしていることになる。
+  **PMI (pointwise mutual information)** でスコアリングできる。
+  - PMI は、対象 User がその Item を、
+    全体の人気と比較してどの程度選びやすいか？のスコアに相当
+  - ***Don't recommend the obvious: Estimate probability ratios***
 
 ---
 
@@ -35,26 +43,42 @@ img[alt~="center"] {
 
 ### 最近の Sequential Recommendation の傾向
 - 提案されている手法
-  - GRU4Rec
-  - SASRec (based on transformer)
-  - BERT4Rec (based on transformer)
-    - SOTAと言われているが詳細なbenchmarkに基づく批判がある
-      - See: [arxiv/2207.07483](https://arxiv.org/abs/2207.07483)
+  - GRU4Rec(2016)
+  - SASRec (2018, based on transformer)
+  - BERT4Rec (2019, based on transformer)
+    - 精度が高いと言われているが、詳細なbenchmarkに基づく批判がある
+      - Petrov, Macdonald (RecSys2022) [arxiv/2207.07483](https://arxiv.org/abs/2207.07483)
+      - A Systematic Review and Replicability Study of BERT4Rec for Sequential Recommendation
+        - 非常に面白い。おそらく今年のBest Paper
 
 ---
 ### (Cont.)
 - SASRec(左) vs BERT4Rec(右) (benchmark論文から)
-![width:750px center](./images/RecRatio_SeqRec_Algorithm.png)
+![width:900px center](./images/RecRatio_SeqRec_Algorithm.png)
 
 ---
 
 ### 問題意識
-- Sequential Recommendation の評価では(後で説明するように)
-- レコメンドされるものは、popular item に偏る。
+- Sequential Recommendation の最近の評価では
+  popular item をサンプリングして、評価することが多い(後で説明)
+- 結局レコメンドされるものは、popular item に偏るから
+  これで大丈夫！という理屈でOKになっている。
+  - 本当に大丈夫？
+
+![width:600px center](./images/RecRatio_SamplingHIT.png)
+
+---
+
+### 問題意識
+- 映画のレコメンドの場合
   - 例 : Bob は Toy Story を見る確率が高い
     → Toy Story をレコメンド
-    - Toy Story は popular item なので、**Bobがそれほど好きでなくても**見る確率が高い。
-    - Bob が見る確率が **他のUserと比べて見る確率が高いかどうか** が大事なのではないだろうか？
+    - Toy Story はみんなが見るので、
+      悪くないレコメンドのはず。
+    - でも、**Bobが他の人より好きでなくても**
+      見る確率が高くなる。
+    - Bob が見る確率が **他のUserと比べて**
+      **見る確率が高いかどうか** が大事では？
 
 ![bg right:25% width:300px](./images/RecRatio_ToyStory.png)
 
@@ -76,20 +100,23 @@ img[alt~="center"] {
   - 過去の系列 $S_u$ がある時に
     次の Item $v$ の確率 $P(v | S_u)$ が高いものをお勧めする。
 - PMIを使うレコメンドの設定
-  - Item popularity $P(v)$ と、過去履歴 $S_u$ からの確率 $P(v | S_u)$ から
-    計算した確率の比$\displaystyle \frac{P(v | S_u)}{P(v)}$が最も高い Item $v$ をお勧めする。
+  - Item popularity $P(v)$ と、過去履歴 $S_u$ からの確率 $P(v | S_u)$ の
+    比 $\displaystyle \frac{P(v | S_u)}{P(v)}$が最も高い Item $v$ をお勧めする。
+    - Toy Story の $P(v)$ はとても大きい
+    - Bob が見る確率 $P(v | S_u)$ が $P(v)$ より大きいかが重要
 
 ---
 
 ## PMI
-- 確率比にlogを取ったものは、Pointwise Mutual Informationと呼ばれる。
+- 確率比にlogを取ったものは、
+  **PMI(Pointwise Mutual Information)** と呼ばれる。
 $$\log \frac{P(v | S_u)}{P(v)}
- = \log \frac{P(v, S_u)}{P(S_u) P(v)}
+ = \log \frac{P(v, S_u)}{P(v) P(S_u)}
 $$
 
 - 意味
   - $v, S_u$ が独立であれば、PMI=0
-  - $v, S_u$ の関連が強ければ、PMI > 0 で値は大きい。
+  - $v, S_u$ の関連が強ければ、PMI>0 で値は大きい。
 
 ---
 
@@ -101,8 +128,8 @@ $$
 
 ---
 
-## (Cont.)
-
+### (Cont.)
+$k$ 番目の item が positive item であるかの確率:
 $$\begin{aligned}
 P(k | \{v^{(i)}\}, S_u)
   &\propto P(v^{(k)} | S_u) \prod_{i \ne k} P(v^{(i)} | S_u) \\
@@ -112,18 +139,17 @@ P(k | \{v^{(i)}\}, S_u)
 \end{aligned}
 $$
 
-ここで最後の reference distribution を $P_C(v) = P(v)$ (popularity) とすると
-この値のlogは PMI になっている！
+$P_C(v) = P(v)$ (popularity) とすると $\exp(\textrm{PMI})$ になっている！
 
 ---
 
 ## 整理すると...
-- 1つのpositive と $k$個のnegative (popularity distributionからサンプル)から
+- 1つのpositive と $k$個のnegative (popularityでサンプリング)から
   1つのpositiveを予測するモデルについて log-likelihood を maximize すれば、
   PMI最大のアイテムをレコメンドするようになる。
   - sampling は 復元抽出(Sampling With Replacement) でよい。
 
-![width:750px center](./images/RecRatio_NextItemModel.png)
+![width:600px center](./images/RecRatio_NextItemModel.png)
 
 ---
 
@@ -134,7 +160,7 @@ $$
     **残りのすべてのアイテム** $C = [c_1, ..., c_{|C|}]$ のスコアをつけ、
     ソートをして正解アイテムのレコメンド順位 $r(v_i)$ をつける。
 - HIT@k の定義
-  
+
 $$ \textrm{HIT}@k = \frac1{|U|}
   \sum_{i=1}^{|U|} \mathbb{1}_{r(v_i) \le k}$$
 
@@ -146,7 +172,8 @@ $$ \textrm{HIT}@k = \frac1{|U|}
   - User $i$ が最後に接触した item を $v_i$ として、この正解アイテムと
     **popularity でサンプリングしたアイテム** $C = [c_1, ..., c_{|C|}]$ の
     スコアでソートをして正解アイテムのレコメンド順位 $r(v_i)$ をつける。
-
+- $|C|$が小さいと、HIT@kは大きくなる。
+  - ただし異なる手法の間での性能比較は可能。
 
 ---
 
@@ -155,11 +182,11 @@ $$ \textrm{HIT}@k = \frac1{|U|}
   この値を用いて (cross entropyで) log likelihood maximize する。
 $$
 P(k | \{v^{(i)}\}, S_u)
-  = \frac{\exp (f(v^{(k)}, S_u))}{\sum_{i=0}^{|C|}\exp (f(v^{(k)}, S_u))}
+  = \frac{\exp (f(v^{(k)}, S_u))}{\sum_{i=0}^{|C|}\exp (f(v^{(i)}, S_u))}
   \propto \exp (f(v^{(k)}, S_u))
 $$
 - negative sample を popularity で sample して学習すれば、
-  最終層の値 $f(v^{(k)}, S_u)$ は $\log(\textrm{PMI})$  となる。
+  最終層の値 $f(v^{(k)}, S_u)$ は PMI となる。
 $$\begin{aligned}
 f(v^{(k)}, S_u) 
  &= \log P(k | v^{(k)}, S_u) \\
@@ -169,37 +196,113 @@ f(v^{(k)}, S_u)
 ---
 
 ## 予測モデル No.2 : Logistic型
-- $k$番目のitem $v$ が、positveかどうかの確率を Logistic Regression で fit する。
+- $k$番目のitem $v$ が、positiveである$(y=1)$確率を
+  Logistic Regression で fit する。
 $$
-P(k | v, S_u) = \sigma(f(v, S_u)) = \frac{1}{1 + \exp(- f(v, S_u)))}
+P(y=1 | v, S_u) = \sigma(f(v, S_u)) = \frac{1}{1 + \exp(- f(v, S_u)))}
 $$
 
 - この場合も、1件ずつ0/1判別のモデルの最尤推定すると次のようになる。
 $$
-f(v, S_u) = \log \frac{P(v^{(k)} | S_u)}{P_C(v^{(k)})} - \log (|C|)
+f(v, S_u) = \log \frac{P(v^{(k)} | S_u)}{P_C(v^{(k)})} - \log (|C|) \quad ... (1)
 $$
 
 ---
 
-## (Cont.) 証明
+## (1) の証明
+
+正例は $|C|+1$個のサンプルにランダムにあるから、
+
+$$
+p(y | v, S_u) \propto
+\begin{cases}
+ \frac1{|C|+1} P(v|S_u) &\quad (y=1)\\
+ \frac{|C|}{|C|+1} P_C(v)   &\quad (y=0)
+\end{cases}
+$$
+
+なので、比をとると、
+
+$$
+\begin{aligned}
+\frac{P(y=1 | v, S_u)}{P(y=0 | v, S_u)}
+  &= \frac{\frac1{|C|+1} P(v|S_u)}{\frac{|C|}{|C|+1} P_C(v)} \\
+  &= \frac1{|C|} \frac{P(v|S_u)}{P_C(v)} \quad ... (2)
+\end{aligned}
+$$
 
 ---
 
-## 
+## (1) の証明続き
+
+一方、Logistic Regression を仮定したから、
+
+$$
+\begin{aligned}
+P(y=1 | v, S_u) &= \frac{1}{1 + \exp(- f(v, S_u)))} \\
+P(y=0 | v, S_u) &= \frac{\exp(- f(v, S_u))}{1 + \exp(- f(v, S_u)))} \\\\
+\therefore \quad
+\frac{P(y=1 | v, S_u)}{P(y=0 | v, S_u)} &= \exp(f(v, S_u)) \quad ... (3)
+\end{aligned}
+$$
+
 
 ---
 
-$$\begin{aligned}
-S_u \\\\
+## (1) の証明続き
 
-v^{(0)} \\\\
+$(2), (3)$ から
 
-v^{(1)} \\\\
+$$
+\exp(f(v, S_u)) = \frac1{|C|} \frac{P(v|S_u)}{P_C(v)}
+$$
 
-v^{(|C|)} \\\\
+logをとって
+$$
+f(v, S_u) = \log \frac{P(v|S_u)}{P_C(v)} - \log |C| \quad ... (1)
+$$
+となり $(1)$ が導かれた。
 
-v^{(k)} \sim P_C(v^{(k)} ) \\\\
+---
 
-v^{(k)} \sim P(v^{(k)} ) ... \textrm{popularity} \\\\
+### 手法の評価
+- 対象データは、ML-1M, ML-20M で評価を実施。
+- 手法は SASRec/BERT4Rec で実施。
+- ユーザごと、最後の1アイテム接触のレコメンドのHIT@kで評価。
 
-\end{aligned}$$
+---
+
+### RQ.1 : 確率比(PMI)モデルは、HIT@kを改善するか？
+- レコメンド方法 (objective) ... ユーザ接触確率利用 (Conditional)
+  - 確率比(PMI)利用 (Prob. Ratio.)
+- 損失関数 (Loss)
+  - 全アイテムを使ったSoftmax (Full Softmax) ... 今回紹介を省いた
+  - 100アイテムをpopularityサンプリングしたSoftmax (Sampled)
+- HIT@kの計算も、100アイテムpopularityサンプリングで計算
+
+![width:700px center](./images/RecRatio_Table3.png)
+
+---
+
+### RQ.2 : サンプリング数を増やせば、HIT@kを改善するか？
+- 概ね、100サンプル程度を使えば、十分HIT@kが改善する
+  - 図は、BERT4Rec の HIT@10の場合
+
+![width:800px center](./images/RecRatio_Fig1.png)
+
+---
+
+### RQ.4 : PMIは、popularでないitemをレコメンドできるか？
+- できる！
+![width:1000px center](./images/RecRatio_Table6.png)
+
+---
+
+### まとめ
+- popularity を用いて negative sampling をすると、
+  PMIをスコアとしたレコメンドモデルを学習できる。
+  - 学習したモデルは、従来モデルを
+    単に学習するよりも metrics が改善する。
+  - レコメンド結果は、popularity よりも
+    個人の好みを重視した結果になる
+- モデル学習時のサンプリングは、100アイテム程度で十分精度が出る。
