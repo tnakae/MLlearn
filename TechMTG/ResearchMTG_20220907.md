@@ -5,6 +5,9 @@ img[alt~="center"] {
 }
 </style>
 
+<!-- paginate: true -->
+<!-- footer: Research MTG : 2022-09-07 -->
+
 # Research MTG
 ## 2022-09-07 / nakae
 - 今回の対象論文

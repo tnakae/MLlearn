@@ -5,6 +5,9 @@ img[alt~="center"] {
 }
 </style>
 
+<!-- paginate: true -->
+
+
 # pml-book1
 ## 2 : Probability: Univariate Models
 
