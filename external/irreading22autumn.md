@@ -6,10 +6,12 @@ size: 4:3
 -->
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+
 section {
   background-color: white;
   font-size: 140%;
-  font-family: "Meiryo";
+  font-family: "Noto Sans JP", "Meiryo";
   color: #333333;
   padding: 40px 40px 50px 50px;
   background-image: url(./images/bizreach.png);
