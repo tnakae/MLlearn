@@ -12,57 +12,63 @@ section {
   background-color: white;
   font-size: 140%;
   font-family: "Noto Sans JP", "Meiryo";
-  color: #333333;
+  color: #444444;
   padding: 40px 40px 50px 50px;
   background-image: url(./images/bizreach.png);
   background-repeat: no-repeat;
-  background-size: 230px;
-  background-position: right 50px top 30px;
+  background-size: 200px;
+  background-position: right 50px top 20px;
+}
+
+footer {
+  box-sizing: border-box;
+  border-top: 3px solid darkred;
+}
+
+section.top h1,
+section.top h2 {
+  text-align: center;
 }
 
 section.top h1 {
   font-size: 1.2rem;
   margin-top: 220px;
   margin-bottom: 60px;
-  text-align: center;
 }
 
 section.top h2 {
+  color: #777777;
   font-size: 0.75rem;
   margin-top: 0px;
-  text-align: center;
+}
+
+section.normal h1,
+section.normal h2,
+section.normal h3,
+section.normal h4 {
+  margin-top: -25px;
+  margin-bottom: -10px;
+  margin-left: -50px;
+  margin-right: -50px;
+  padding-left: 40px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid darkred;
 }
 
 section.normal h1 {
-  font-size: 1.2rem;
-  margin-top: -10px;
-  padding-bottom: 10px;
-  margin-bottom: -10px;
-  border-bottom: 3px solid darkred;
+  font-size: 1.15rem;
 }
 
 section.normal h2 {
-  font-size: 1.15rem;
-  margin-top: -10px;
-  padding-bottom: 10px;
-  margin-bottom: -10px;
-  border-bottom: 3px solid darkred;
+  font-size: 1.05rem;
 }
 
 section.normal h3 {
-  font-size: 1.1rem;
-  margin-top: -10px;
-  padding-bottom: 10px;
-  margin-bottom: -10px;
-  border-bottom: 3px solid darkred;
+  font-size: 1.01rem;
 }
 
 section.normal h4 {
-  font-size: 1.05rem;
-  margin-top: -10px;
-  padding-bottom: 10px;
-  margin-bottom: -10px;
-  border-bottom: 3px solid darkred;
+  font-size: 1rem;
 }
 
 img[alt~="center"] {
@@ -84,7 +90,7 @@ img[alt~="center"] {
 
 ## 自己紹介
 - 中江 俊博 (なかえ としひろ)
-  - ビズリーチ
+  - 株式会社ビズリーチ
     - リクルーティングプロダクト本部
       プラットフォーム開発部
       AI1グループ Mgr
@@ -112,7 +118,7 @@ img[alt~="center"] {
   - [Two-sided fairness in rankings via Lorenz dominance](https://proceedings.neurips.cc/paper/2021/hash/48259990138bc03361556fb3f94c5d45-Abstract.html)
 - 要旨
   - レコメンドにおいてItemに対するpreferenceが与えられた状況で、
-    User側のutilityの和と、ItemのGini係数(の拡張 ; GGF)の和が
+    User側のutilityの和と、ItemのGini係数(の拡張 ; GGFs)の和が
     最良になる fair なランキングの手法を提案。
   - 前年の論文で、微分可能な関数による手法を提案していた。
     今回の論文で、微分不可能な Gini係数を、微分可能な関数の手法に
@@ -150,7 +156,7 @@ img[alt~="center"] {
   - **user/item いずれも curve を上側に改善できない状態**
   - 論文著者にとっての fairness の定義
 
-![width:600px center](./images/GGF_Lorentz_curve.png)
+![width:550px center](./images/GGF_Lorentz_curve.png)
 
 ---
 
@@ -208,7 +214,7 @@ $$
 g_{\boldsymbol{w}}(\boldsymbol{x}) = \sum_{i=1}^n w_i x_i^{\dagger}
 $$
 - 特に item exposure に対する gini 係数は、
-  GGFを使った次の値を最大化することと(ほぼ)等価
+  GGFsを使った次の値を最大化することと(ほぼ)等価
 $$
 g^{\textrm{item}} (\boldsymbol{v}) = \sum_{j=1}^{m} \frac{m-j+1}{m} v_j^{\dagger}
 $$
@@ -242,10 +248,9 @@ $$
 <!--_class: normal-->
 
 ## GGFsの最適化
-- 骨子
+- 骨子 : Step1/2 の繰り返し (上下幅を縮めながら)
   - Step1. 微分可能な関数で上下を挟み、挟んだ関数上で微分
   - Step2. 微分をつかって Frank-Wolf で $P$ を Update
-  - 上下で挟む幅を少しずつ狭めて Step1/2 を繰り返し。
 - 上下を挟むなめらかな関数 (モーロー包 ; Moreau envelope)
   - 微分不可能な関数 $h(\boldsymbol{z})$ に対して
     次の $h^{\beta}(\boldsymbol{z})$ は比較的簡単な手続きで微分できる。
@@ -262,8 +267,8 @@ h^{\beta}(\boldsymbol{z}) =
 \end{aligned}
 $$
 
-- 計算できた部分 $y_i^{1}, y_j^{2}$ を使って、GGFの線形和全体の微分を算出
-- これをソートして、更新して... はさっき説明した手順と同じ
+- 計算できた部分 $y_i^{1}, y_j^{2}$ を使って、GGFsの線形和全体の微分を算出
+  - これをソートして、更新して...
 $$
 \tilde{\mu}_{ij} = (1-\lambda) y_i^{1} \mu_{ij} +  \lambda y_j^{2}
 $$
@@ -310,7 +315,7 @@ $$
   - これを Lorentz efficiency という
 - GGFs を使った user/item の fairness を考慮したランキングを提案
   - GGFs の和を最大にするランキングは Lorentz efficiency を満たす
-  - 本来微分不可能な関数である GGF を、微分可能な関数で近似できる
+  - 本来微分不可能な関数である GGFs を、微分可能な関数で近似できる
     近似した関数での微分を使って、Frank-Wolfで最適化できる
 - GGFs を使ったランキングは従来手法より、
   user utility /item exposure を改善
