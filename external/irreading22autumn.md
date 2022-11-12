@@ -146,25 +146,25 @@ img[alt~="center"] {
 
 <!--_class: normal-->
 
-## Lorentz efficiency
-- Generalized Lorentz Curve
+## Lorenz efficiency
+- Generalized Lorenz Curve
   - utility を低いほうから累積和をとったもの(図はNeurIPS2021)
     - 下に突き出ているほど不平等
       - 青 : user utility の総和 max → itemが不平等
       - 赤 : user も item もまだ上に持っていける余地がある。
-- Lorentz efficiency
+- Lorenz efficiency
   - **user/item いずれも curve を上側に改善できない状態**
   - 論文著者にとっての fairness の定義
 
-![width:550px center](./images/GGF_Lorentz_curve.png)
+![width:550px center](./images/GGF_Lorenz_curve.png)
 
 ---
 
 <!--_class: normal-->
 
-## Lorentz efficiency を見つける
+## Lorenz efficiency を見つける
 - 増加とともに効果が低減するような関数 $\psi(x, \alpha)$ の
-  次の線形和を最大にする $P$ は、Lorentz efficiency を満たす！
+  次の線形和を最大にする $P$ は、Lorenz efficiency を満たす！
   - $\lambda, \alpha_1, \alpha_2$ は事前に決めたパラメータ
 
 $$
@@ -223,7 +223,7 @@ $$
 
 <!--_class: normal-->
 
-## GGFs と Lorentz efficiency
+## GGFs と Lorenz efficiency
 - 例えば次の関数を最大にするレコメンド $P$ は、
   user utility / item gini 係数のバランスをとることができる。
   - GGFs の線形和の形となっている ($\lambda$ はパラメータ)
@@ -239,7 +239,7 @@ g^{\textrm{item}} &= \sum_{j=1}^m \frac{m-j+1}{m} v_j^{\dagger}
 $$
 
 - 実は GGFs の線形和の形の関数を最大にするレコメンド $P$ は、
-  Lorentz efficiency を満たしている
+  Lorenz efficiency を満たしている
 - では、そのような $P$ をさっきと同じように微分で求めよう！
   - **残念！ GGFs は単純に微分できない** (昇順ソートがあるから)
 
@@ -311,8 +311,8 @@ $$
 <!--_class: normal-->
 
 ## まとめ
-- user/item 両方の Lorentz 曲線が改善できない = fairである
-  - これを Lorentz efficiency という
+- user/item 両方の Lorenz 曲線が改善できない = fairである
+  - これを Lorenz efficiency という
 - GGFs を使った user/item の fairness を考慮したランキングを提案
   - GGFs の和を最大にするランキングは Lorentz efficiency を満たす
   - 本来微分不可能な関数である GGFs を、微分可能な関数で近似できる
