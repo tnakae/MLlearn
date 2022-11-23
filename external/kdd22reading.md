@@ -172,7 +172,9 @@ $$
 
 ## サンプル事後層別化
 - Treatmentへの割り当て確率$p$が、時刻に依存せず固定である前提で、
-  サンプルを$n$個集めた後で、均等に $k(n)$ 区間に分割
+  サンプルを$n$個集めた後で、均等に $k(n)$ 個の区間に分割
+![center width:500px](./images/NonStationary_sps.png)
+
 - そのあとで、層別平均の差の重み付き和をとる
   (Sample-based Post Stratification ; SPS)
 
@@ -185,7 +187,6 @@ $$
   )
 $$
 
-![center width:500px](./images/NonStationary_sps.png)
 
 ---
 
@@ -195,18 +196,19 @@ $$
 - Theorem 3.1
   - もし $\displaystyle \lim_{n \to +\infty} k(n) = +\infty$ でかつ $k(n) = o(n^{\frac12})$ なら
 $$
-\begin{aligned}
 \sqrt{\bar{\lambda}}(\hat{\alpha}_{\textrm{sps}} - \alpha) \overset{d} \to
-  {\mathcal{N}(0, V_{\textrm{sps}})} \textrm{, as} \hspace{0.5em} \bar{\lambda} \to +{\infty} \\
+  {\mathcal{N}(0, V_{\textrm{sps}})} \textrm{, as} \hspace{0.5em} \bar{\lambda} \to +{\infty}
+$$
+- ここで、分散 $V_{\textrm{sps}}$については
+$$
 V_{\textrm{sps}} =
   \textrm{Var}[\mu_1(\tau) - \mu_0(\tau)] +
   \mathbb{E}[
     \frac{\sigma_1^2(\tau)}{p} + \frac{\sigma_0^2(\tau)}{1-p}
   ]
-\end{aligned}
 $$
+
 - ちなみに、naiveなA/B比較(サンプル平均の差)の分散と比較する
-  - SPSは$\mu$の差の分散、naiveは分散の重み付き和になっている。
 
 $$
 V_{\textrm{naive}} =
@@ -217,54 +219,126 @@ V_{\textrm{naive}} =
   ]
 $$
 
+- **SPSは$\mu$の差の分散、naiveは分散の重み付き和になっている**
 
 
----
-<!--_class: normal-->
-
-## 提案1の場合の分散
-
-$$
-\begin{aligned}
-\textrm{Treatment : } & S_{j,1}  \\
-\textrm{Control : } & S_{j,0}  \\
-
-S_j
-\end{aligned}
-$$
-
-------
-
-<!--_class: normal-->
-
-## 前提 (通常のA/B)
 
 ---
-
 <!--_class: normal-->
 
-## 非定常性の前提
+## 何を言っているのか？
 
----
+- naiveの分散は、それぞれの時系列の分散の和 + $\varepsilon$の分散
+- SPSの分散は、その時点における平均の差の分散 + $\varepsilon$の分散
 
-<!--_class: normal-->
-
-## 定理
-
----
-
-<!--_class: normal-->
-
-## 分散評価
+![center width:550px](./images/NonStationary_variance.png)
 
 ---
 
 <!--_class: normal-->
 
 ## 具体例
+- 線形に変化するような場合 ($\sigma_1, \sigma_2$ も同様に線形を仮定)
+
+$$
+\begin{aligned}
+\mu_1(t) = a_1 + b_1 t \\
+\mu_2(t) = a_0 + b_0 t
+\end{aligned}
+$$
+
+- 推定値の分散
+$$
+\begin{aligned}
+V_{\textrm{naive}}
+  &= (b_1^2 + b_0^2) \frac{T^2}6 + [\sigma \textrm{に起因する分散}] \\
+V_{\textrm{sps}}
+  &= (b_1 - b_0) ^ 2 \frac{T^2}{12} + [\sigma \textrm{に起因する分散}]
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\frac{V_{\textrm{sps}}}{V_{\textrm{naive}}}
+  \approx \frac{(b_1 - b_0) ^ 2}{2(b_1^2 + b_0^2)}
+\end{aligned}
+$$
+
+- $b_1, b_0$ が大きく、かつ値が非常に近い場合は、
+  sps は naive に対する改善が非常に大きい
 
 ---
 
 <!--_class: normal-->
 
+## もっと一般的な状況
+- Treatment への割り当て確率 $p(t)$ が時刻によって異なる場合
+  **もし、各時点における到着密度 $f(t)$ が正確にわかるのであれば**
+  $\alpha_{\textrm{dps}}$ は、サンプル数増加で真の推定値 $\alpha$ に(確率)収束する。
+  - dps = De-biased Post Stratification
+
+$$
+\begin{aligned}
+\hat{\alpha}_{\textrm{dps}}
+ &= \sum_{j=1}^{k(n)} q_j
+  (
+    \frac{\sum_{i\in S_{j,1}} y_i}{|S_{j,1}|} -
+    \frac{\sum_{i\in S_{j,0}} y_i}{|S_{j,0}|}
+  ) \\
+\textrm{here} \quad q_j
+ &= \int_{\frac{j-1}{k(n)}T}^{\frac{j}{k(n)}T} f(t)dt
+\end{aligned}
+$$
+
+- dpsでは、各時点でA/Bテストに含める確率もバラバラでもよいらしい。
+- ただし、$f(t)$ が正確にわかるという前提を一般の状況で
+  仮定するのは難しいと思われる
+  - このdpsについては、論文での記載はややあいまい。
+    もう少しちゃんと書いてほしい (掘り下げる余地ありとみるべきか)
+
+
+---
+<!--_class: normal-->
+
+## 別の発想 : 到着順に割り当てる工夫
+- $p=1/2$で割り当てるのであれば、到着順にA/B/A/B/.. と
+  割り当てるのもよさそう！
+  - ほぼ同一時刻で対になるサンプルを生成しているのと
+    同じとみることができるから。
+- この発想で、Treatmentへの割り当て確率が有理数 $p=u/w$ で、
+  出現する $w$ 個ごとに Treatment を $u$ 個割り当てた場合の
+  A/Bテストの平均の差 $\hat{\alpha}_{\textrm{tr}}$ についても sps と同程度の分散になる！
+  - tr : Time-grouped Randomization
+
+$$
+V_{\textrm{tr}} =
+  \textrm{Var}[\mu_1(\tau) - \mu_0(\tau)] +
+  \mathbb{E}[
+    \frac{\sigma_1^2(\tau)}{p} + \frac{\sigma_0^2(\tau)}{1-p}
+  ]
+$$
+
+---
+<!--_class: normal-->
+
+## 実験結果
+- 7日間で時刻/曜日変動があるようなダミーデータを
+  Eコマースの実績データをもとに生成
+  - A/B比率 $p = 1/2$ とする。
+- 手法
+  - naive : A/B群の平均の差
+  - psf : 曜日ごと平均の差の平均
+  - sps, tr : 提案法
+- 結果
+
+![center width:500px](./images/NonStationary_result.png)
+
+---
+<!--_class: normal-->
+
 ## まとめ
+- 一般的な非定常の時系列となるA/Bテストで分散が小さくなる
+  サンプル事後層別化 sps = Sample-based Post Stratification を考案
+  - 単なる層別化と比較しても分散が小さくなる
+- A/B群への割り当てを到着順に割り当てるような方法
+  (tr = Time-grouped randomization)でも sps と同等の分散となる
