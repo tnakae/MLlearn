@@ -371,6 +371,17 @@ $$
 \end{aligned}
 $$
 
+- 解釈
+  - $X, Y$が独立であるモデル $p(x)p(y)$ から、
+    同時分布 $p(x,y)$にupdateした時に増えた情報量
+    - 完全に独立であれば 0
+    - 独立でない度合いが大きければ大きくなる。
+      - 最大値は1ではないので、相関係数とはちょっと違う(後で説明)
+
+---
+
+### (Cont.)
+
 - 性質
   - $\mathbb{I}(X ; Y) = D_{\textrm{KL}} (p(x,y) \Vert p(x)p(y)) \ge 0$
     - 等号成立は $p(x,y) = p(x) p(y)$
@@ -400,24 +411,43 @@ $$
 
 ---
 
-### 6.3.5. MI as a "generalized correlation coefficient"
-
----
-
 ### 6.3.6. Normalized mutual Information
+- Mutual Information は相関係数っぽいが、最大値は1ではない(わかりにくい)
+$$
+\begin{aligned}
+\mathbb{I}(X ; Y) &= \mathbb{H}(X) - \mathbb{H}(X|Y) \le \mathbb{H}(X) \\
+\mathbb{I}(X ; Y) &= \mathbb{H}(Y) - \mathbb{H}(Y|X) \le \mathbb{H}(Y) \\
+\therefore \mathbb{I}(X ; Y)  & \le \min(\mathbb{H}(X), \mathbb{H}(Y))
+\end{aligned}
+$$
+
+- そこで、*Normalized mutual Information*
+
+$$
+\textrm{NMI}(X ; Y)
+ = \frac{\mathbb{I}(X;Y)}{\min(\mathbb{H}(X), \mathbb{H}(Y))} \le 1
+$$
+
+- Discreteであれば、相関係数っぽく使えるが、
+  Continuousだと entropy が負になって意味不明 -> MICを使おう
 
 ---
 
 ### 6.3.7. Maximal information coefficient
+- MIC (Maximal information coefficient)
+  - 連続な確率変数 $X,Y$ の NMI みたいな値を計算する方法
+- 手順
+  - まず、2次元平面を X方向に$G_x$個、Y方向に$G_y$個のgrid $G$に分割して離散化
+  - 次の値を計算
+    - $\displaystyle \textrm{MIC}(X, Y) = \max_G \frac{\mathbb{I}((X;Y)|_G)}{\log \Vert G \Vert}$
+      - $\mathbb{I}((X;Y)|_G)$ : grid $G$ に離散化して計算した MI
+      - $\Vert G \Vert$ : gridの数 ... $\log$を取ると entropyの最大値となる
+  - 値の範囲は 0から1となる
 
 ---
 
-### 6.3.8. Data Processing inequality
+![width:900 center](./images/chap6_Fig6_5.png)
 
 ---
 
-### 6.3.9. Sufficient Statistics
-
----
-
-### 6.3.10. Fano's inequality
+![width:900 center](./images/chap6_Fig6_6.png)
